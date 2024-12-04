@@ -22,3 +22,13 @@ jobs:
 
       - name: Setup Docker
         uses: crazy-max/ghaction-setup-docker@v3.5.0
+
+  docker-build:
+    runs-on: windows-latest
+    needs: build-and-test
+    steps:
+      - name: Setup Docker
+        uses: crazy-max/ghaction-setup-docker@v3.5.0
+     
+      - name: Build docker image
+        run: docker build -t api:latest .
