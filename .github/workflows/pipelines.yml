@@ -62,7 +62,6 @@ jobs:
     
       - name: Update assembly version
         run: |
-            $version = $env:VERSION
             $projectFile = './src/RichillCapital.Api/RichillCapital.Api.csproj'
             $fileContent = Get-Content $projectFile
             $fileContent -replace '<Version>.*</Version>', "<Version>${{ steps.versioning.outputs.version }}</Version>" | Set-Content $projectFile
