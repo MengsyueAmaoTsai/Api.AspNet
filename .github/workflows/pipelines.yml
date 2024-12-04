@@ -28,20 +28,40 @@ jobs:
           dotnet build ./RichillCapital.Api.sln -c Release --nologo
           dotnet test ./RichillCapital.Api.sln -c Release --no-restore --no-build --nologo --verbosity normal
           dotnet publish ./src/RichillCapital.Api/RichillCapital.Api.csproj -c Release -o ./artifacts --no-restore --no-build --nologo
-
-  docker-build:
+   
+  release:
     runs-on: windows-latest
-    # needs: build-and-test
+    needs: build-and-test
+    if: startsWith(github.ref, 'refs/heads/release/')
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
-      
-      - name: Setup Docker Buildx
-        uses: docker/setup-buildx-action@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
         with:
-          driver: docker
-      
-      - name: Build docker image
+          dotnet-version: 8.0.x
+
+      - name: Fetch release version
+        id: versioning
         run: |
-          docker build --isolation=hyperv -t api:latest .
+          $branchName = '${{ github.ref }}' # refs/heads/release/0.0.0
+
+          if ($branchName -match 'refs/heads/release/(.+)') {
+            $version = $Matches[1]
+            Write-Host "VERSION=$version" >> $GITHUB_ENV
+            echo "::set-output name=version::$version"
+          } else {
+            throw "Branch name is not in the expected format: refs/heads/release/*.*.*"
+          }
+
+      - name: Publish application
+        run: |
+          dotnet publish ./src/RichillCapital.Api/RichillCapital.Api.csproj -c Release -o ./artifacts --nologo
+    
+      - name: Upload release artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: RichillCapital.Api-${{ steps.versioning.outputs.version }}
+          path: ./artifacts
