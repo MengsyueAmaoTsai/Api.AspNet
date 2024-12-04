@@ -1,6 +1,9 @@
+using Hangfire;
+
 using RichillCapital.Api.Endpoints;
 using RichillCapital.Api.Middlewares;
 using RichillCapital.Api.OpenApi;
+using RichillCapital.Infrastructure.BackgroundJobs;
 using RichillCapital.Infrastructure.Clock;
 using RichillCapital.Infrastructure.Events;
 using RichillCapital.Infrastructure.Logging;
@@ -18,6 +21,7 @@ builder.Services.AddApplicationServices();
 builder.Services.AddDateTimeProvider();
 builder.Services.AddDomainEventServices();
 builder.Services.AddPersistence();
+builder.Services.AddBackgroundJobs();
 
 builder.Services.AddMiddlewares();
 builder.Services.AddOpenApi();
@@ -55,6 +59,12 @@ app.UseRouting();
 app.UseCors("AllowAnyOrigin");
 
 app.UseSwaggerDoc();
+
+app.UseHangfireDashboard(options: new DashboardOptions
+{
+    Authorization = [],
+    DarkModeEnabled = true,
+});
 
 app.MapEndpoints();
 
