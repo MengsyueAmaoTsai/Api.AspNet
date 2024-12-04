@@ -52,4 +52,6 @@ public sealed class AccountId : SingleValueObject<string>
             .Ensure(id => !string.IsNullOrWhiteSpace(id), Error.Invalid($"'{nameof(AccountId)}' cannot be empty."))
             .Ensure(id => id.Length <= MaxLength, Error.Invalid($"'{nameof(AccountId)}' cannot be longer than {MaxLength} characters."))
             .Then(id => new AccountId(id));
+
+    public static AccountId NewAccountId() => From(Guid.NewGuid().ToString()).Value;
 }
