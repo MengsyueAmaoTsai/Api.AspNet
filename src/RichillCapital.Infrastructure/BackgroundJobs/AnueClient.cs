@@ -12,6 +12,25 @@ internal sealed class AnueClient(
     HttpClient _httpClient)
 {
     private const string SearchPath = "/fund/api/v2/search/fund";
+    private static readonly string[] DefaultFields = [
+        "categoryAbbr",
+        "change",
+        "changePercent",
+        "classCurrencyLocal",
+        "cnyesId",
+        "displayNameLocal",
+        "displayNameLocalWithKwd",
+        "forSale",
+        "forSale",
+        "inceptionDate",
+        "investmentArea",
+        "lastUpdate",
+        "nav",
+        "prevPrice",
+        "priceDate",
+        "return1Month",
+        "saleStatus",
+    ];
 
     internal async Task<Result<SearchFundResponse>> SearchFundAsync(
         int page = 1,
@@ -20,29 +39,9 @@ internal sealed class AnueClient(
         int institutional = 0,
         int isShowTag = 1)
     {
-        string[] defaultFields = [
-            "categoryAbbr",
-            "change",
-            "changePercent",
-            "classCurrencyLocal",
-            "cnyesId",
-            "displayNameLocal",
-            "displayNameLocalWithKwd",
-            "forSale",
-            "forSale",
-            "inceptionDate",
-            "investmentArea",
-            "lastUpdate",
-            "nav",
-            "prevPrice",
-            "priceDate",
-            "return1Month",
-            "saleStatus",
-        ];
-
         var parameters = new Dictionary<string, object>
         {
-            { "fields", string.Join(",", defaultFields) },
+            { "fields", string.Join(",", DefaultFields) },
             { "page", page },
             { "institutional", institutional },
             { "isShowTag", isShowTag },
