@@ -43,6 +43,5 @@ jobs:
           driver: docker
       
       - name: Build docker image
-        uses: docker/build-push-action@v4
-        with:
-          push: false
+        run: |
+          docker build -t api:latest .
