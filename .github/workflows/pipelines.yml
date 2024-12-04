@@ -22,7 +22,10 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 8.0.x
-      
+
+      - name: Setup Docker
+        uses: crazy-max/ghaction-setup-docker@v3.5.0      
+
       - name: Restore dependencies
         run: |
             dotnet restore ./RichillCapital.Api.sln --no-cache --force --verbosity normal
@@ -38,4 +41,7 @@ jobs:
       - name: Publish
         run: |
             dotnet publish ./src/RichillCapital.Api/RichillCapital.Api.csproj -c Release -o ./artifacts --no-build --nologo
-
+      
+      - name: Build docker image
+        run: |
+            docker build -t api:latest -f ./Dockerfile .
