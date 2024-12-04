@@ -43,12 +43,12 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
 
         builder.HasData([
             CreateUser(
-                id: "1",
+                id: "UID0000001",
                 email: "someone@example.com",
                 name: "RichillCapital User",
                 passwordHash: "PA55W0RD"),
             CreateUser(
-                id: "2",
+                id: "UID0000002",
                 email: "anotherone@example.com",
                 name: "RichillCapital User 2",
                 passwordHash: "PA55W0RD"),
