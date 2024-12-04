@@ -62,7 +62,7 @@ internal sealed class InstrumentInitializationJob(
                     .Create(InstrumentId.From(f.CnyesId).ThrowIfFailure().Value,
                     Symbol.From(f.CnyesId).ThrowIfFailure().Value,
                     f.DisplayNameLocal,
-                    InstrumentType.Index,
+                    InstrumentType.MutualFund,
                     _dateTimeProvider.UtcNow);
 
                 if (errorOr.HasError)

@@ -81,6 +81,7 @@ public sealed class InstrumentType : Enumeration<InstrumentType>
     public static readonly InstrumentType Option = new(nameof(Option), 3);
     public static readonly InstrumentType Swap = new(nameof(Swap), 4);
     public static readonly InstrumentType Forward = new(nameof(Forward), 5);
+    public static readonly InstrumentType MutualFund = new(nameof(MutualFund), 6);
 
     private InstrumentType(string name, int value)
         : base(name, value)
