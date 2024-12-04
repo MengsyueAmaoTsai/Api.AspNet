@@ -25,7 +25,7 @@ public static class ApiRoutes
 
         public const string List = InstrumentsBase;
         public const string Create = InstrumentsBase;
-        public const string Get = $"{InstrumentsBase}/{{instrumentId}}";
-        public const string Delete = $"{InstrumentsBase}/{{instrumentId}}";
+        public const string Get = $"{InstrumentsBase}/{{symbol}}";
+        public const string Delete = $"{InstrumentsBase}/{{symbol}}";
     }
 }
