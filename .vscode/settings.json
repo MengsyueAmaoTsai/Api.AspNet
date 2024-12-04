@@ -1,4 +1,4 @@
 {
   "dotnet.defaultSolution": "./RichillCapital.Api.sln",
-  "cSpell.words": ["aspnet", "nologo"]
+  "cSpell.words": ["aspnet", "dtos", "nologo"]
 }
