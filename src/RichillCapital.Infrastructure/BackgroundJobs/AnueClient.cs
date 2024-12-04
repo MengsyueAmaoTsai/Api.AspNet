@@ -7,12 +7,14 @@ using RichillCapital.SharedKernel.Monads;
 
 namespace RichillCapital.Infrastructure.BackgroundJobs;
 
-internal sealed class AnueClient(
-    ILogger<AnueClient> _logger,
-    HttpClient _httpClient)
+internal static class ApiRoutes
 {
-    private const string SearchPath = "/fund/api/v2/search/fund";
-    private static readonly string[] DefaultFields = [
+    internal const string SearchFunds = "/fund/api/v2/search/fund";
+}
+
+internal sealed record SearchFundsRequest
+{
+    internal static readonly string[] DefaultFields = [
         "categoryAbbr",
         "change",
         "changePercent",
@@ -31,17 +33,22 @@ internal sealed class AnueClient(
         "return1Month",
         "saleStatus",
     ];
-
-    internal async Task<Result<SearchFundResponse>> SearchFundAsync(
+}
+internal sealed class AnueClient(
+    ILogger<AnueClient> _logger,
+    HttpClient _httpClient)
+{
+    internal async Task<Result<SearchFundResponse>> SearchFundsAsync(
         int page = 1,
         string sortBy = "priceDate",
         string orderBy = "desc",
         int institutional = 0,
-        int isShowTag = 1)
+        int isShowTag = 1,
+        CancellationToken cancellationToken = default)
     {
         var parameters = new Dictionary<string, object>
         {
-            { "fields", string.Join(",", DefaultFields) },
+            { "fields", string.Join(",", SearchFundsRequest.DefaultFields) },
             { "page", page },
             { "institutional", institutional },
             { "isShowTag", isShowTag },
@@ -53,21 +60,59 @@ internal sealed class AnueClient(
 
         var httpRequest = new HttpRequestMessage(
             HttpMethod.Get,
-            $"{SearchPath}?{queryString}");
+            $"{ApiRoutes.SearchFunds}?{queryString}");
 
         _logger.LogInformation("Searching for page {page}", page);
 
-        var httpResponse = await _httpClient.SendAsync(httpRequest);
-        var content = await httpResponse.Content.ReadAsStringAsync();
+        var httpResponseResult = await InvokeRequestAsync(httpRequest, cancellationToken);
 
-        if (!httpResponse.IsSuccessStatusCode)
+        if (httpResponseResult.IsFailure)
         {
-            _logger.LogError("Failed to search fund: {content}", content);
-            return Result<SearchFundResponse>.Failure(Error.Unexpected(content));
+            return Result<SearchFundResponse>.Failure(httpResponseResult.Error);
         }
 
-        var response = JsonConvert.DeserializeObject<SearchFundResponse>(content);
+        var httpResponse = httpResponseResult.Value;
 
-        return Result<SearchFundResponse>.With(response);
+        return await HandleResponseAsync<SearchFundResponse>(httpResponse, cancellationToken);
+    }
+
+    private async Task<Result<HttpResponseMessage>> InvokeRequestAsync(
+        HttpRequestMessage request,
+        CancellationToken cancellationToken = default)
+    {
+        try
+        {
+            var response = await _httpClient.SendAsync(request, cancellationToken);
+            return Result<HttpResponseMessage>.With(response);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError("Failed to invoke request: {error}", ex.Message);
+            return Result<HttpResponseMessage>.Failure(Error.Unexpected(ex.Message));
+        }
+    }
+
+    private async Task<Result<TResponse>> HandleResponseAsync<TResponse>(
+        HttpResponseMessage httpResponse,
+        CancellationToken cancellationToken = default)
+    {
+        if (!httpResponse.IsSuccessStatusCode)
+        {
+            return await HandleFailureAsync<TResponse>(httpResponse, cancellationToken);
+        }
+
+        var content = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
+        var response = JsonConvert.DeserializeObject<TResponse>(content);
+
+        return Result<TResponse>.With(response);
+    }
+
+    private async Task<Result<TResponse>> HandleFailureAsync<TResponse>(
+        HttpResponseMessage httpResponse,
+        CancellationToken cancellationToken = default)
+    {
+        var content = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
+        _logger.LogError("Failed to search fund: {content}", content);
+        return Result<TResponse>.Failure(Error.Unexpected(content));
     }
 }

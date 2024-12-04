@@ -19,7 +19,7 @@ internal sealed class InstrumentInitializationJob(
 {
     public async Task ProcessAsync()
     {
-        var firstPageResult = await _anueClient.SearchFundAsync(page: 1);
+        var firstPageResult = await _anueClient.SearchFundsAsync(page: 1);
 
         if (firstPageResult.IsFailure)
         {
@@ -32,7 +32,7 @@ internal sealed class InstrumentInitializationJob(
 
         for (var page = 1; page <= totalPage; page++)
         {
-            var searchResult = await _anueClient.SearchFundAsync(page);
+            var searchResult = await _anueClient.SearchFundsAsync(page);
 
             if (searchResult.IsFailure)
             {
