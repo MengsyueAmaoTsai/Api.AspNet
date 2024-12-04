@@ -27,23 +27,17 @@ jobs:
           dotnet-version: 8.0.x
 
       - name: Setup Docker
-        uses: crazy-max/ghaction-setup-docker@v3.5.0      
+        uses: crazy-max/ghaction-setup-docker@v3.5.0  
 
-      - name: Restore dependencies
+      - name: Test apaplication
         run: |
             dotnet restore ./RichillCapital.Api.sln --no-cache --force --verbosity normal
-
-      - name: Build
-        run: |
             dotnet build ./RichillCapital.Api.sln -c Release --nologo
-
-      - name: Test
-        run: |
             dotnet test ./RichillCapital.Api.sln -c Release --no-build --nologo --verbosity normal
 
-      - name: Publish
+      - name: Publish application
         run: |
-            dotnet publish ./src/RichillCapital.Api/RichillCapital.Api.csproj -c Release -o ./artifacts --no-build --nologo
+            dotnet publish ./src/RichillCapital.Api/RichillCapital.Api.csproj -c Release -o ./artifacts --no-restore --no-build --nologo
 
   docker-build:    
     runs-on: windows-latest
