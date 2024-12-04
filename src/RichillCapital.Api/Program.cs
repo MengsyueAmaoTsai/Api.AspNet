@@ -68,6 +68,11 @@ app.UseHangfireDashboard(options: new DashboardOptions
 
 app.MapEndpoints();
 
+app.Services.GetRequiredService<IRecurringJobManager>()
+    .AddOrUpdate<IInstrumentInitializationJob>(
+        "instrument-initialization",
+        job => job.ProcessAsync(),
+        "0 0 * * *");
 
 await app.RunAsync();
 
