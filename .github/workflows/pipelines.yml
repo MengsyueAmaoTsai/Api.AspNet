@@ -8,6 +8,10 @@ on:
       - feature/**
       - release/**
 
+defaults:
+  run:
+    shell: pwsh
+      
 jobs:
   build-and-test:
     runs-on: windows-latest
@@ -56,11 +60,10 @@ jobs:
             throw "Branch name is not in the expected format: refs/heads/release/*.*.*"
           }
     
-      - name: Modify assembly in .csproj
+      - name: Update assembly version
         run: |
             $version = $env:VERSION
             $projectFile = './src/RichillCapital.Api/RichillCapital.Api.csproj'
-            $assemblyVersion = [System.Version]::Parse(${{ steps.versioning.outputs.version }})
             $fileContent = Get-Content $projectFile
             $fileContent -replace '<Version>.*</Version>', "<Version>${{ steps.versioning.outputs.version }}</Version>" | Set-Content $projectFile
 
