@@ -9,9 +9,12 @@ on:
       - hotfix/**
       - release/**
 
+defaults:
+  run:
+    shell: pwsh
 
 jobs:
-  build-and-test: 
+  dotnet-build-and-test: 
     runs-on: windows-latest
     
     steps:
@@ -41,7 +44,15 @@ jobs:
       - name: Publish
         run: |
             dotnet publish ./src/RichillCapital.Api/RichillCapital.Api.csproj -c Release -o ./artifacts --no-build --nologo
-      
+
+  docker-build:    
+    runs-on: windows-latest
+    needs: dotnet-build-and-test
+
+    steps:  
+      - name: Setup Docker
+        uses: crazy-max/ghaction-setup-docker@v3.5.0
+                
       - name: Build docker image
         run: |
             docker build -t api:latest -f ./Dockerfile .
