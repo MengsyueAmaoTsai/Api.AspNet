@@ -1,0 +1,41 @@
+name: Pipelines
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - feature/**
+      - hotfix/**
+      - release/**
+
+
+jobs:
+  build-and-test: 
+    runs-on: windows-latest
+    
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+      
+      - name: Restore dependencies
+        run: |
+            dotnet restore ./RichillCapital.Api.sln --no-cache --force --verbosity normal
+
+      - name: Build
+        run: |
+            dotnet build ./RichillCapital.Api.sln -c Release --nologo
+
+      - name: Test
+        run: |
+            dotnet test ./RichillCapital.Api.sln -c Release --no-build --nologo --verbosity normal
+
+      - name: Publish
+        run: |
+            dotnet publish ./src/RichillCapital.Api/RichillCapital.Api.csproj -c Release -o ./artifacts --no-build --nologo
+
