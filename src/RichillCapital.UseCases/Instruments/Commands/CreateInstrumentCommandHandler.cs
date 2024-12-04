@@ -10,11 +10,11 @@ namespace RichillCapital.UseCases.Instruments.Commands;
 internal sealed class CreateInstrumentCommandHandler(
     IDateTimeProvider _dateTimeProvider,
     IRepository<Instrument> _repository,
-    IUnitOfWork _unitOfWork) : 
+    IUnitOfWork _unitOfWork) :
     ICommandHandler<CreateInstrumentCommand, ErrorOr<InstrumentId>>
 {
     public async Task<ErrorOr<InstrumentId>> Handle(
-        CreateInstrumentCommand command, 
+        CreateInstrumentCommand command,
         CancellationToken cancellationToken)
     {
         var validationResult = Result<(InstrumentId, Symbol, InstrumentType)>.Combine(
@@ -28,6 +28,11 @@ internal sealed class CreateInstrumentCommandHandler(
         }
 
         var (id, symbol, type) = validationResult.Value;
+
+        if (await _repository.AnyAsync(ins => ins.Symbol == symbol))
+        {
+            return ErrorOr<InstrumentId>.WithError(InstrumentError.AlreadyExists(symbol));
+        }
 
         var createdTime = _dateTimeProvider.UtcNow;
 
