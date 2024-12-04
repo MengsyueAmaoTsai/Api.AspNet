@@ -44,4 +44,4 @@ jobs:
       
       - name: Build docker image
         run: |
-          docker build -t api:latest .
+          docker build --isolation=hyperv -t api:latest .
