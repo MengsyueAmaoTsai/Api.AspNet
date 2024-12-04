@@ -19,31 +19,40 @@ internal sealed class InstrumentInitializationJob(
 {
     public async Task ProcessAsync()
     {
+        var result = await InitializeInstrumentsFromAnue();
+
+        if (result.IsFailure)
+        {
+            _logger.LogWarning("Failed to initialize instruments. {error}", result.Error);
+            return;
+        }
+
+        _logger.LogInformation("Successfully initialized instruments");
+    }
+
+    private async Task<Result> InitializeInstrumentsFromAnue()
+    {
         var firstPageResult = await _anueClient.SearchFundsAsync(page: 1);
 
         if (firstPageResult.IsFailure)
         {
-            _logger.LogError("Failed to search fund. {error}", firstPageResult.Error);
-            return;
+            return Result.Failure(firstPageResult.Error);
         }
 
-        var totalPage = firstPageResult.Value.Items.LastPage;
-        _logger.LogInformation("Total pages: {totalPage}", totalPage);
-
-        for (var page = 1; page <= totalPage; page++)
+        for (var page = 1; page <= firstPageResult.Value.Items.LastPage; page++)
         {
             var searchResult = await _anueClient.SearchFundsAsync(page);
 
             if (searchResult.IsFailure)
             {
-                _logger.LogError("Failed to search fund. {error}", searchResult.Error);
+                _logger.LogWarning("Failed to search fund. {error}", searchResult.Error);
                 continue;
             }
 
             await ProcessAndSaveFundsAsync(searchResult.Value.Items.Data);
         }
 
-        _logger.LogInformation("Finished processing funds");
+        return Result.Success;
     }
 
     private async Task ProcessAndSaveFundsAsync(IEnumerable<FundResponse> funds)
