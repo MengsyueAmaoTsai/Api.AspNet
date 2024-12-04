@@ -68,6 +68,9 @@ app.UseHangfireDashboard(options: new DashboardOptions
 
 app.MapEndpoints();
 
+var backgroundJobClient = app.Services.GetRequiredService<IBackgroundJobClient>();
+backgroundJobClient.Enqueue<IInstrumentInitializationJob>(job => job.ProcessAsync());
+
 app.Services.GetRequiredService<IRecurringJobManager>()
     .AddOrUpdate<IInstrumentInitializationJob>(
         "instrument-initialization",
