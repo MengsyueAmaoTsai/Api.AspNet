@@ -75,3 +75,18 @@ jobs:
         with:
           name: RichillCapital.Api-${{ steps.versioning.outputs.version }}
           path: ./artifacts
+
+  deploy:
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/master'
+
+    steps:
+      - name: Build Docker Image
+        run: |
+          docker build -t api:latest . 
+          docker tag api:latest ${{ secrets.DOCKER_USERNAME }}/api:latest
+  
+      - name: Push Docker Image
+        run: |
+          echo ${{ secrets.DOCKER_PASSWORD }} | docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
+          docker push ${{ secrets.DOCKER_USERNAME }}/api:latest
