@@ -18,4 +18,14 @@ public static class ApiRoutes
         public const string Get = $"{UsersBase}/{{userId}}";
         public const string Delete = $"{UsersBase}/{{userId}}";
     }
+
+    public static class Instruments
+    {
+        private const string InstrumentsBase = $"{ApiBase}/instruments";
+
+        public const string List = InstrumentsBase;
+        public const string Create = InstrumentsBase;
+        public const string Get = $"{InstrumentsBase}/{{instrumentId}}";
+        public const string Delete = $"{InstrumentsBase}/{{instrumentId}}";
+    }
 }
