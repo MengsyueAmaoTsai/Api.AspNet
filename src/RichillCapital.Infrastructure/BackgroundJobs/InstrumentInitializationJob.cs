@@ -5,24 +5,21 @@ using Newtonsoft.Json;
 using RichillCapital.Domain;
 using RichillCapital.Domain.Abstractions.Clock;
 using RichillCapital.Domain.Abstractions.Repositories;
-using RichillCapital.SharedKernel;
 using RichillCapital.SharedKernel.Monads;
 
 namespace RichillCapital.Infrastructure.BackgroundJobs;
 
 internal sealed class InstrumentInitializationJob(
     ILogger<InstrumentInitializationJob> _logger,
-    HttpClient _httpClient,
     IDateTimeProvider _dateTimeProvider,
+    AnueClient _anueClient,
     IRepository<Instrument> _instrumentRepository,
     IUnitOfWork _unitOfWork) :
     IInstrumentInitializationJob
 {
-    private const string SearchPath = "/fund/api/v2/search/fund";
-
     public async Task ProcessAsync()
     {
-        var firstPageResult = await SearchFundAsync(page: 1);
+        var firstPageResult = await _anueClient.SearchFundAsync(page: 1);
 
         if (firstPageResult.IsFailure)
         {
@@ -35,7 +32,7 @@ internal sealed class InstrumentInitializationJob(
 
         for (var page = 1; page <= totalPage; page++)
         {
-            var searchResult = await SearchFundAsync(page);
+            var searchResult = await _anueClient.SearchFundAsync(page);
 
             if (searchResult.IsFailure)
             {
@@ -51,26 +48,23 @@ internal sealed class InstrumentInitializationJob(
 
     private async Task ProcessAndSaveFundsAsync(IEnumerable<FundResponse> funds)
     {
-        var errorOrInstruments = new List<ErrorOr<Instrument>>();
-
-        foreach (var fund in funds)
-        {
-            var errorOr = Instrument
-                .Create(InstrumentId.From(fund.CnyesId).ThrowIfFailure().Value,
-                Symbol.From(fund.CnyesId).ThrowIfFailure().Value,
-                fund.DisplayNameLocal,
-                InstrumentType.Index,
-                _dateTimeProvider.UtcNow);
-
-            if (errorOr.HasError)
+        var validatedInstruments = funds
+            .Select(f =>
             {
-                _logger.LogWarning("Failed to create instrument. {error}", errorOr.Errors.First());
-            }
+                var errorOr = Instrument
+                    .Create(InstrumentId.From(f.CnyesId).ThrowIfFailure().Value,
+                    Symbol.From(f.CnyesId).ThrowIfFailure().Value,
+                    f.DisplayNameLocal,
+                    InstrumentType.Index,
+                    _dateTimeProvider.UtcNow);
 
-            errorOrInstruments.Add(errorOr);
-        }
+                if (errorOr.HasError)
+                {
+                    _logger.LogWarning("Failed to create instrument. {error}", errorOr.Errors.First());
+                }
 
-        var validatedInstruments = errorOrInstruments
+                return errorOr;
+            })
             .Where(errorOr => errorOr.IsValue)
             .Select(errorOr => errorOr.Value)
             .ToList();
@@ -85,65 +79,6 @@ internal sealed class InstrumentInitializationJob(
 
         await _unitOfWork.SaveChangesAsync();
         _logger.LogInformation("Saved {count} instruments", validatedInstruments.Count);
-    }
-
-    private async Task<Result<SearchFundResponse>> SearchFundAsync(
-        int page = 1,
-        string sortBy = "priceDate",
-        string orderBy = "desc",
-        int institutional = 0,
-        int isShowTag = 1)
-    {
-        string[] defaultFields = [
-            "categoryAbbr",
-            "change",
-            "changePercent",
-            "classCurrencyLocal",
-            "cnyesId",
-            "displayNameLocal",
-            "displayNameLocalWithKwd",
-            "forSale",
-            "forSale",
-            "inceptionDate",
-            "investmentArea",
-            "lastUpdate",
-            "nav",
-            "prevPrice",
-            "priceDate",
-            "return1Month",
-            "saleStatus",
-        ];
-
-        var parameters = new Dictionary<string, object>
-        {
-            { "fields", string.Join(",", defaultFields) },
-            { "page", page },
-            { "institutional", institutional },
-            { "isShowTag", isShowTag },
-            { "order", sortBy },
-            { "sort", orderBy },
-        };
-
-        var queryString = string.Join("&", parameters.Select(kvp => $"{kvp.Key}={kvp.Value}"));
-
-        var httpRequest = new HttpRequestMessage(
-            HttpMethod.Get,
-            $"{SearchPath}?{queryString}");
-
-        _logger.LogInformation("Searching for page {page}", page);
-
-        var httpResponse = await _httpClient.SendAsync(httpRequest);
-        var content = await httpResponse.Content.ReadAsStringAsync();
-
-        if (!httpResponse.IsSuccessStatusCode)
-        {
-            _logger.LogError("Failed to search fund: {content}", content);
-            return Result<SearchFundResponse>.Failure(Error.Unexpected(content));
-        }
-
-        var response = JsonConvert.DeserializeObject<SearchFundResponse>(content);
-
-        return Result<SearchFundResponse>.With(response);
     }
 }
 
@@ -183,8 +118,8 @@ internal sealed record SearchFundItemsResponse
     public required int LastPage { get; init; }
 
     public required string Path { get; init; }
-    public required int From { get; init; }
-    public required int To { get; init; }
+    public required int? From { get; init; }
+    public required int? To { get; init; }
     public required int Total { get; init; }
     public required IEnumerable<FundResponse> Data { get; init; }
 }

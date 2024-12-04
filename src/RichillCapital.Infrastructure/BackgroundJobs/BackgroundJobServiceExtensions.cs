@@ -23,12 +23,13 @@ public static class BackgroundJobServiceExtensions
             options.SchedulePollingInterval = TimeSpan.FromSeconds(30);
         });
 
-        services.AddHttpClient<IInstrumentInitializationJob, InstrumentInitializationJob>(client =>
+        services.AddHttpClient<AnueClient>(client =>
         {
             client.BaseAddress = new Uri("https://fund.api.cnyes.com");
             client.Timeout = TimeSpan.FromSeconds(5);
         });
 
+        services.AddScoped<IInstrumentInitializationJob, InstrumentInitializationJob>();
         return services;
     }
 }
