@@ -30,8 +30,8 @@ jobs:
           dotnet publish ./src/RichillCapital.Api/RichillCapital.Api.csproj -c Release -o ./artifacts --no-restore --no-build --nologo
 
   docker-build:
-    runs-on: ubuntu-latest
-    needs: build-and-test
+    runs-on: windows-latest
+    # needs: build-and-test
 
     steps:
       - name: Checkout repository
