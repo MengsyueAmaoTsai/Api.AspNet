@@ -4,6 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using RichillCapital.SharedKernel.Specifications.Evaluators;
+using FluentValidation;
+using RichillCapital.Infrastructure.Common;
+using Microsoft.Extensions.Options;
 
 namespace RichillCapital.Infrastructure.Persistence;
 
@@ -11,11 +14,11 @@ public static class PersistenceServiceExtensions
 {
     public static IServiceCollection AddPersistence(this IServiceCollection services)
     {
-        //services.AddValidatorsFromAssembly(
-        //    typeof(PersistenceServiceExtensions).Assembly,
-        //    includeInternalTypes: true);
+        services.AddValidatorsFromAssembly(
+           typeof(PersistenceServiceExtensions).Assembly,
+           includeInternalTypes: true);
 
-        //services.AddOptionsWithFluentValidation<DatabaseOptions>(DatabaseOptions.SectionKey);
+        services.AddOptionsWithFluentValidation<DatabaseOptions>(DatabaseOptions.SectionKey);
 
         services.AddSqlServer();
 
@@ -25,7 +28,7 @@ public static class PersistenceServiceExtensions
     public static WebApplicationBuilder AddDatabaseOptions(
         this WebApplicationBuilder builder)
     {
-        //builder.Services.Configure<DatabaseOptions>(builder.Configuration.GetSection(DatabaseOptions.SectionKey));
+        builder.Services.Configure<DatabaseOptions>(builder.Configuration.GetSection(DatabaseOptions.SectionKey));
         return builder;
     }
 
@@ -35,16 +38,16 @@ public static class PersistenceServiceExtensions
             .BuildServiceProvider()
             .CreateScope();
 
-        //var databaseOptions = scope.ServiceProvider
-        //    .GetRequiredService<IOptions<DatabaseOptions>>()
-        //    .Value;
+        var databaseOptions = scope.ServiceProvider
+           .GetRequiredService<IOptions<DatabaseOptions>>()
+           .Value;
 
         services
-           .AddDbContext<EFCoreDbContext>(options =>
-               options.UseSqlServer("Server=127.0.0.1,1433;Database=richillcapital;User Id=SA;Password=Pa55w0rd!;TrustServerCertificate=true;MultipleActiveResultSets=true;Encrypt=False"))
-           .AddDbContextFactory<EFCoreDbContext>(
-               (Action<DbContextOptionsBuilder>)null!,
-               ServiceLifetime.Scoped);
+            .AddDbContext<EFCoreDbContext>(options =>
+                options.UseSqlServer(databaseOptions.ConnectionString))
+            .AddDbContextFactory<EFCoreDbContext>(
+                (Action<DbContextOptionsBuilder>)null!,
+                ServiceLifetime.Scoped);
 
         services.AddScoped(typeof(IRepository<>), typeof(EFCoreRepository<>));
         services.AddScoped(typeof(IReadOnlyRepository<>), typeof(EFCoreRepository<>));
