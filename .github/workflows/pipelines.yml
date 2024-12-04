@@ -7,6 +7,7 @@ on:
       - master
       - feature/**
       - release/**
+      - hotfix/**
 
 defaults:
   run:
@@ -15,6 +16,8 @@ defaults:
 jobs:
   build-and-test:
     runs-on: windows-latest
+    if: github.ref != 'refs/heads/master'
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
