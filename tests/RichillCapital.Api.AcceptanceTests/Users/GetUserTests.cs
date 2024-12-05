@@ -13,7 +13,7 @@ public sealed class GetUserTests(
     [Fact]
     public async Task Should_ReturnUser()
     {
-        var expectedUserId = "1";
+        var expectedUserId = "UID0000001";
 
         var user = await Client.GetFromJsonAsync<UserDetailsResponse>($"/api/v1/users/{expectedUserId}");
 

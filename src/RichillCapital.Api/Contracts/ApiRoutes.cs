@@ -9,6 +9,7 @@ public static class ApiRoutes
     {
     }
 
+    // Identity
     public static class Users
     {
         private const string UsersBase = $"{ApiBase}/users";
@@ -19,6 +20,7 @@ public static class ApiRoutes
         public const string Delete = $"{UsersBase}/{{userId}}";
     }
 
+    // Market data
     public static class Instruments
     {
         private const string InstrumentsBase = $"{ApiBase}/instruments";
@@ -27,5 +29,16 @@ public static class ApiRoutes
         public const string Create = InstrumentsBase;
         public const string Get = $"{InstrumentsBase}/{{symbol}}";
         public const string Delete = $"{InstrumentsBase}/{{symbol}}";
+    }
+
+    // Trading
+    public static class Accounts
+    {
+        private const string AccountBase = $"{ApiBase}/accounts";
+
+        public const string List = AccountBase;
+        public const string Create = AccountBase;
+        public const string Get = $"{AccountBase}/{{accountId}}";
+        public const string Delete = $"{AccountBase}/{{accountId}}";
     }
 }
