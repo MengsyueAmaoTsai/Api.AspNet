@@ -31,7 +31,7 @@ internal sealed class CreateInstrumentCommandHandler(
 
         if (await _repository.AnyAsync(ins => ins.Symbol == symbol))
         {
-            return ErrorOr<InstrumentId>.WithError(InstrumentError.AlreadyExists(symbol));
+            return ErrorOr<InstrumentId>.WithError(InstrumentErrors.AlreadyExists(symbol));
         }
 
         var createdTime = _dateTimeProvider.UtcNow;

@@ -95,7 +95,7 @@ public sealed class InstrumentType : Enumeration<InstrumentType>
     }
 }
 
-public static class InstrumentError
+public static class InstrumentErrors
 {
     public static Error NotFound(Symbol symbol) =>
         Error.NotFound("Instruments.NotFound", $"Instrument with symbol {symbol} not found.");

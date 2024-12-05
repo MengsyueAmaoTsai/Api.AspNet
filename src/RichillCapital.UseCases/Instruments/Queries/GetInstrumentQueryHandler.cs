@@ -28,7 +28,7 @@ internal sealed class GetInstrumentQueryHandler(
 
         if (maybeInstrument.IsNull)
         {
-            return ErrorOr<InstrumentDto>.WithError(InstrumentError.NotFound(symbol));
+            return ErrorOr<InstrumentDto>.WithError(InstrumentErrors.NotFound(symbol));
         }
 
         var instrument = maybeInstrument.Value;

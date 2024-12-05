@@ -65,6 +65,15 @@ public sealed class SignalSourceId : SingleValueObject<string>
             .Then(id => new SignalSourceId(id));
 }
 
+public static class SignalSourceErrors
+{
+    public static Error NotFound(SignalSourceId id) =>
+        Error.NotFound($"Signal source with id '{id}' was not found.");
+
+    public static Error AlreadyExists(SignalSourceId id) =>
+        Error.Conflict($"Signal source with id '{id}' already exists.");
+}
+
 public abstract record SignalSourceDomainEvent : DomainEvent
 {
     public required SignalSourceId SignalSourceId { get; init; }
