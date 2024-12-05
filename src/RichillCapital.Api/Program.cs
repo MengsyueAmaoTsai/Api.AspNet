@@ -68,15 +68,26 @@ app.UseHangfireDashboard(options: new DashboardOptions
 
 app.MapEndpoints();
 
-var backgroundJobClient = app.Services.GetRequiredService<IBackgroundJobClient>();
-backgroundJobClient.Enqueue<IInstrumentInitializationJob>(job => job.ProcessAsync());
-
-app.Services.GetRequiredService<IRecurringJobManager>()
-    .AddOrUpdate<IInstrumentInitializationJob>(
-        "instrument-initialization",
-        job => job.ProcessAsync(),
-        "0 0 * * *");
+// app.UseBackgroundJobs();
 
 await app.RunAsync();
 
 public partial class Program;
+
+
+internal static class TempExtensions
+{
+    internal static WebApplication UseBackgroundJobs(this WebApplication app)
+    {
+        var backgroundJobClient = app.Services.GetRequiredService<IBackgroundJobClient>();
+        backgroundJobClient.Enqueue<IInstrumentInitializationJob>(job => job.ProcessAsync());
+
+        app.Services.GetRequiredService<IRecurringJobManager>()
+            .AddOrUpdate<IInstrumentInitializationJob>(
+                "instrument-initialization",
+                job => job.ProcessAsync(),
+                "0 0 * * *");
+
+        return app;
+    }
+}
