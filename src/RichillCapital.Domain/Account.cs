@@ -1,3 +1,4 @@
+using RichillCapital.Domain.Abstractions.Events;
 using RichillCapital.SharedKernel;
 using RichillCapital.SharedKernel.Monads;
 
@@ -54,4 +55,25 @@ public sealed class AccountId : SingleValueObject<string>
             .Then(id => new AccountId(id));
 
     public static AccountId NewAccountId() => From(Guid.NewGuid().ToString()).Value;
+}
+
+public static class AccountErrors
+{
+    public static Error AlreadyExists(AccountId id) =>
+        Error.Conflict($"An account with ID '{id}' already exists.");
+
+    public static Error UserNotExists(UserId id) =>
+        Error.NotFound($"A user with ID '{id}' was not found.");
+
+    public static Error NotFound(AccountId id) =>
+        Error.NotFound($"An account with ID '{id}' was not found.");
+}
+
+public abstract record AccountDomainEvent : DomainEvent
+{
+    public required AccountId AccountId { get; init; }
+}
+
+public sealed record AccountCreatedDomainEvent : AccountDomainEvent
+{
 }

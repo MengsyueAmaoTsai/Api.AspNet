@@ -57,7 +57,6 @@ public sealed class InstrumentId : SingleValueObject<string>
     }
 }
 
-
 public sealed class Symbol : SingleValueObject<string>
 {
     internal const int MaxLength = 36;
@@ -87,4 +86,13 @@ public sealed class InstrumentType : Enumeration<InstrumentType>
         : base(name, value)
     {
     }
+}
+
+public static class InstrumentError
+{
+    public static Error NotFound(Symbol symbol) =>
+        Error.NotFound("Instruments.NotFound", $"Instrument with symbol {symbol} not found.");
+
+    public static Error AlreadyExists(Symbol symbol) =>
+        Error.NotFound("Instruments.AlreadyExists", $"Instrument with symbol {symbol} already exists.");
 }
