@@ -39,6 +39,11 @@ public sealed class User : Entity<UserId>
             passwordHash,
             createdTime);
 
+        user.RegisterDomainEvent(new UserCreatedDomainEvent
+        {
+            UserId = id,
+        });
+
         return ErrorOr<User>.With(user);
     }
 }

@@ -34,6 +34,11 @@ public sealed class Account : Entity<AccountId>
             name,
             createdTime);
 
+        account.RegisterDomainEvent(new AccountCreatedDomainEvent
+        {
+            AccountId = id,
+        });
+
         return ErrorOr<Account>.With(account);
     }
 }

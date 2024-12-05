@@ -1,3 +1,4 @@
+using RichillCapital.Domain.Abstractions.Events;
 using RichillCapital.SharedKernel;
 using RichillCapital.SharedKernel.Monads;
 
@@ -37,6 +38,12 @@ public sealed class Instrument : Entity<InstrumentId>
             description,
             type,
             createdTime);
+
+        instrument.RegisterDomainEvent(new InstrumentCreatedDomainEvent
+        {
+            InstrumentId = id,
+            Symbol = symbol,
+        });
 
         return ErrorOr<Instrument>.With(instrument);
     }
@@ -95,4 +102,14 @@ public static class InstrumentError
 
     public static Error AlreadyExists(Symbol symbol) =>
         Error.NotFound("Instruments.AlreadyExists", $"Instrument with symbol {symbol} already exists.");
+}
+
+public abstract record InstrumentDomainEvent : DomainEvent
+{
+    public required InstrumentId InstrumentId { get; init; }
+    public required Symbol Symbol { get; init; }
+}
+
+public sealed record InstrumentCreatedDomainEvent : InstrumentDomainEvent
+{
 }
