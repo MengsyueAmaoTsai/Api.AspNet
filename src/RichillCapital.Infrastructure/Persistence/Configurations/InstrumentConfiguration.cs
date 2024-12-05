@@ -40,16 +40,16 @@ internal sealed class InstrumentConfiguration : IEntityTypeConfiguration<Instrum
         builder
             .HasData([
                 CreateInstrument(
-                    symbol: "TWSE",
-                    description: "Taiwan Stock Exchange Index",
-                    type: InstrumentType.Index),
+                    symbol: "BINANCE:BTCUSDT.P",
+                    description: "BTC / USDT Perpetual Swap",
+                    type: InstrumentType.Swap),
                 CreateInstrument(
-                    symbol: "TPEX",
-                    description: "Taipei Security Exchange Index",
-                    type: InstrumentType.Index),
+                    symbol: "BINANCE:ETHUSDT.P",
+                    description: "ETH / USDT Perpetual Swap",
+                    type: InstrumentType.Swap),
                 CreateInstrument(
-                    symbol: "BTCUSDT.P",
-                    description: "Bitcoin to US Dollar Perpetual Swap",
+                    symbol: "BINANCE:SOLUSDT.P",
+                    description: "SOL / USDT Perpetual Swap",
                     type: InstrumentType.Swap),
             ]);
     }
