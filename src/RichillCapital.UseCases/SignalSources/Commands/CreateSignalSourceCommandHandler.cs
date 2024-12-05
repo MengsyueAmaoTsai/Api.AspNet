@@ -2,6 +2,7 @@
 using RichillCapital.Domain;
 using RichillCapital.Domain.Abstractions.Clock;
 using RichillCapital.Domain.Abstractions.Repositories;
+using RichillCapital.SharedKernel;
 using RichillCapital.SharedKernel.Monads;
 using RichillCapital.UseCases.Abstractions;
 
@@ -17,14 +18,19 @@ internal sealed class CreateSignalSourceCommandHandler(
         CreateSignalSourceCommand command,
         CancellationToken cancellationToken)
     {
-        var validationResult = SignalSourceId.From(command.Id);
+        var validationResult = Result<(SignalSourceId, SignalSourceStage)>
+            .Combine(
+                SignalSourceId.From(command.Id),
+                SignalSourceStage
+                    .FromName(command.Stage)
+                    .ToResult(Error.Invalid($"Invalid stage: {command.Stage}")));
 
         if (validationResult.IsFailure)
         {
             return ErrorOr<SignalSourceId>.WithError(validationResult.Error);
         }
 
-        var signalSourceId = validationResult.Value;
+        var (signalSourceId, stage) = validationResult.Value;
 
         if (await _repository.AnyAsync(
             s => s.Id == signalSourceId,
@@ -38,6 +44,7 @@ internal sealed class CreateSignalSourceCommandHandler(
             command.Name,
             command.Description,
             command.Version,
+            stage,
             _dateTimeProvider.UtcNow);
 
         if (errorOrSignalSource.HasError)

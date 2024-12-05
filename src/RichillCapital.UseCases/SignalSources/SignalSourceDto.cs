@@ -8,6 +8,7 @@ public sealed record SignalSourceDto
     public required string Name { get; init; }
     public required string Description { get; init; }
     public required string Version { get; init; }
+    public required string Stage { get; init; }
     public required DateTimeOffset CreatedTime { get; init; }
 }
 
@@ -20,6 +21,7 @@ internal static class SignalSourceExtensions
             Name = signalSource.Name,
             Description = signalSource.Description,
             Version = signalSource.Version,
+            Stage = signalSource.Stage.Name,
             CreatedTime = signalSource.CreatedTime
         };
 }

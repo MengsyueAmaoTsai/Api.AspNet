@@ -21,39 +21,50 @@ internal sealed class SignalSourceConfiguration : IEntityTypeConfiguration<Signa
                 value => SignalSourceId.From(value).ThrowIfFailure().Value)
             .IsRequired();
 
+        builder
+            .Property(source => source.Stage)
+            .HasEnumerationValueConversion()
+            .IsRequired();
+
         builder.HasData([
             CreateSignalSource(
                 id: "TV-BINANCE:BTCUSDT.P-M15L-001",
                 name: "",
                 description: "",
-                version: "1.0.0"),
+                version: "1.0.0",
+                SignalSourceStage.Simulation),
             CreateSignalSource(
                 id: "TV-BINANCE:BTCUSDT.P-M15S-001",
                 name: "",
                 description: "",
-                version: "1.0.0"),
+                version: "1.0.0",
+                SignalSourceStage.Simulation),
 
             CreateSignalSource(
                 id: "TV-BINANCE:ETHUSDT.P-M15L-001",
                 name: "",
                 description: "",
-                version: "1.0.0"),
+                version: "1.0.0",
+                SignalSourceStage.Simulation),
             CreateSignalSource(
                 id: "TV-BINANCE:ETHUSDT.P-M15S-001",
                 name: "",
                 description: "",
-                version: "1.0.0"),
+                version: "1.0.0",
+                SignalSourceStage.Simulation),
 
             CreateSignalSource(
                 id: "TV-BINANCE:SOLUSDT.P-M15L-001",
                 name: "",
                 description: "",
-                version: "1.0.0"),
+                version: "1.0.0",
+                SignalSourceStage.Simulation),
             CreateSignalSource(
                 id: "TV-BINANCE:SOLUSDT.P-M15S-001",
                 name: "",
                 description: "",
-                version: "1.0.0"),
+                version: "1.0.0",
+                SignalSourceStage.Simulation),
         ]);
     }
 
@@ -61,12 +72,14 @@ internal sealed class SignalSourceConfiguration : IEntityTypeConfiguration<Signa
         string id,
         string name,
         string description,
-        string version) => SignalSource
+        string version,
+        SignalSourceStage stage) => SignalSource
         .Create(
             SignalSourceId.From(id).ThrowIfFailure().Value,
             name,
             description,
             version,
+            stage,
             DateTimeOffset.UtcNow)
         .ThrowIfError()
         .Value;

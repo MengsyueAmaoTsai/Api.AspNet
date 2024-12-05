@@ -11,18 +11,21 @@ public sealed class SignalSource : Entity<SignalSourceId>
         string name,
         string description,
         string version,
+        SignalSourceStage stage,
         DateTimeOffset createdTime)
         : base(id)
     {
         Name = name;
         Description = description;
         Version = version;
+        Stage = stage;
         CreatedTime = createdTime;
     }
 
     public string Name { get; private set; }
     public string Description { get; private set; }
     public string Version { get; private set; }
+    public SignalSourceStage Stage { get; private set; }
     public DateTimeOffset CreatedTime { get; private set; }
 
     public static ErrorOr<SignalSource> Create(
@@ -30,6 +33,7 @@ public sealed class SignalSource : Entity<SignalSourceId>
         string name,
         string description,
         string version,
+        SignalSourceStage stage,
         DateTimeOffset createdTime)
     {
         var source = new SignalSource(
@@ -37,6 +41,7 @@ public sealed class SignalSource : Entity<SignalSourceId>
             name,
             description,
             version,
+            stage,
             createdTime);
 
         source.RegisterDomainEvent(new SignalSourceCreatedDomainEvent
@@ -63,6 +68,21 @@ public sealed class SignalSourceId : SingleValueObject<string>
             .Ensure(id => !string.IsNullOrWhiteSpace(id), Error.Invalid($"'{nameof(SignalSourceId)}' cannot be empty."))
             .Ensure(id => id.Length <= MaxLength, Error.Invalid($"'{nameof(SignalSourceId)}' cannot be longer than {MaxLength} characters."))
             .Then(id => new SignalSourceId(id));
+}
+
+public sealed class SignalSourceStage : Enumeration<SignalSourceStage>
+{
+    public static readonly SignalSourceStage Development = new(nameof(Development), 1);
+    public static readonly SignalSourceStage BackTesting = new(nameof(BackTesting), 2);
+    public static readonly SignalSourceStage Simulation = new(nameof(Simulation), 3);
+    public static readonly SignalSourceStage Production = new(nameof(Production), 4);
+    public static readonly SignalSourceStage Paused = new(nameof(Paused), 5);
+    public static readonly SignalSourceStage Deprecated = new(nameof(Deprecated), 6);
+
+    private SignalSourceStage(string name, int value)
+        : base(name, value)
+    {
+    }
 }
 
 public static class SignalSourceErrors

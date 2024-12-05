@@ -6,6 +6,7 @@ public sealed record CreateSignalSourceRequest
     public required string Name { get; init; }
     public required string Description { get; init; }
     public required string Version { get; init; }
+    public required string Stage { get; init; }
 }
 
 public sealed record SignalSourceCreatedResponse : CreatedResponse

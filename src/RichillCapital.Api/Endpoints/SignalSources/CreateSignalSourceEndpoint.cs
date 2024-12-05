@@ -35,6 +35,7 @@ public sealed class CreateSignalSourceEndpoint(
                 Name = req.Name,
                 Description = req.Description,
                 Version = req.Version,
+                Stage = req.Stage,
             })
             .Then(command => _mediator.Send(command, cancellationToken))
             .Then(id => new SignalSourceCreatedResponse { Id = id.Value })

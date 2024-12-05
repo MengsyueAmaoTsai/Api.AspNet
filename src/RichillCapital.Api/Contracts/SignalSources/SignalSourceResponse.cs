@@ -8,6 +8,7 @@ public record SignalSourceResponse
     public required string Name { get; init; }
     public required string Description { get; init; }
     public required string Version { get; init; }
+    public required string Stage { get; init; }
     public required DateTimeOffset CreatedTime { get; init; }
 }
 
@@ -24,6 +25,7 @@ public static class SignalSourceResponseMapping
             Name = dto.Name,
             Description = dto.Description,
             Version = dto.Version,
+            Stage = dto.Stage,
             CreatedTime = dto.CreatedTime,
         };
 
@@ -34,6 +36,7 @@ public static class SignalSourceResponseMapping
             Name = dto.Name,
             Description = dto.Description,
             Version = dto.Version,
+            Stage = dto.Stage,
             CreatedTime = dto.CreatedTime,
         };
 }
