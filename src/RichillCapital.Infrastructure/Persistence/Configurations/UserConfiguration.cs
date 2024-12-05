@@ -44,14 +44,14 @@ internal sealed class UserConfiguration : IEntityTypeConfiguration<User>
         builder.HasData([
             CreateUser(
                 id: "UID0000001",
-                email: "someone@example.com",
-                name: "RichillCapital User",
-                passwordHash: "PA55W0RD"),
+                email: "mengsyue.tsai@outlook.com",
+                name: "RichillCapital",
+                passwordHash: "among7201"),
             CreateUser(
                 id: "UID0000002",
-                email: "anotherone@example.com",
-                name: "RichillCapital User 2",
-                passwordHash: "PA55W0RD"),
+                email: "mengsyue.tsai@gmail.com",
+                name: "Mengsyue Amao Tsai",
+                passwordHash: "among7201"),
         ]);
     }
 
