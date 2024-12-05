@@ -41,4 +41,15 @@ public static class ApiRoutes
         public const string Get = $"{AccountBase}/{{accountId}}";
         public const string Delete = $"{AccountBase}/{{accountId}}";
     }
+
+    // Automated trading
+    public static class SignalSources
+    {
+        private const string SignalSourcesBase = $"{ApiBase}/signal-sources";
+
+        public const string List = SignalSourcesBase;
+        public const string Create = SignalSourcesBase;
+        public const string Get = $"{SignalSourcesBase}/{{signalSourceId}}";
+        public const string Delete = $"{SignalSourcesBase}/{{signalSourceId}}";
+    }
 }

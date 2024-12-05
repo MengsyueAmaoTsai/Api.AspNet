@@ -6,4 +6,5 @@ internal static class ApiTags
     internal const string Users = nameof(Users);
     internal const string Instruments = nameof(Instruments);
     internal const string Accounts = nameof(Accounts);
+    internal const string SignalSources = nameof(SignalSources);
 }
