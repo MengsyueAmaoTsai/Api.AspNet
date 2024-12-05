@@ -37,9 +37,17 @@ internal sealed class AccountConfiguration : IEntityTypeConfiguration<Account>
 
         builder.HasData([
             CreateAccount(
-                id: "1",
+                id: "5011908",
                 userId: "UID0000001",
-                name: "Account 1"),
+                name: "Pepperstone Demo"),
+            CreateAccount(
+                id: "1178017",
+                userId: "UID0000001",
+                name: "Pepperstone Live Raw"),
+            CreateAccount(
+                id: "xxxxxxxxxxxxxx",
+                userId: "UID0000001",
+                name: "Binance Futures"),
         ]);
     }
 
