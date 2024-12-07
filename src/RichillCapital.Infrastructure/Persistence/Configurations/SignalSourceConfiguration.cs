@@ -28,6 +28,19 @@ internal sealed class SignalSourceConfiguration : IEntityTypeConfiguration<Signa
 
         builder.HasData([
             CreateSignalSource(
+                id: "TV-DEMO-LONG",
+                name: "TV-DEMO-LONG",
+                description: "TradingView Demo Long Signal Source",
+                version: "1.0.0",
+                SignalSourceStage.Simulation),
+            CreateSignalSource(
+                id: "TV-DEMO-SHORT",
+                name: "TV-DEMO-SHORT",
+                description: "TradingView Demo Short Signal Source",
+                version: "1.0.0",
+                SignalSourceStage.Simulation),
+
+            CreateSignalSource(
                 id: "TV-BINANCE:BTCUSDT.P-M15L-001",
                 name: "",
                 description: "",
