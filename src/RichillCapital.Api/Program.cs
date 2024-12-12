@@ -52,7 +52,10 @@ app.UseExceptionHandler(options =>
 {
 });
 
-app.UseHttpsRedirection();
+if (app.Environment.IsProduction())
+{
+    app.UseHttpsRedirection();
+}
 
 app.UseRouting();
 
