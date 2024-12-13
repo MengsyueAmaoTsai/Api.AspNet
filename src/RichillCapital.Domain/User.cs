@@ -60,8 +60,8 @@ public sealed class UserId : SingleValueObject<string>
     public static Result<UserId> From(string value) =>
         Result<string>
             .With(value)
-            .Ensure(id => !string.IsNullOrEmpty(id), Error.Invalid($"'{nameof(value)}' cannot be null or empty."))
-            .Ensure(id => id.Length <= MaxLength, Error.Invalid($"'{nameof(value)}' cannot be longer than {MaxLength} characters."))
+            .Ensure(id => !string.IsNullOrEmpty(id), Error.Invalid($"'{nameof(UserId)}' cannot be null or empty."))
+            .Ensure(id => id.Length <= MaxLength, Error.Invalid($"'{nameof(UserId)}' cannot be longer than {MaxLength} characters."))
             .Then(id => new UserId(id));
 
     public static UserId NewUserId() =>
@@ -80,8 +80,8 @@ public sealed class Email : SingleValueObject<string>
     public static Result<Email> From(string value) =>
         Result<string>
             .With(value)
-            .Ensure(email => !string.IsNullOrEmpty(email), Error.Invalid($"'{nameof(value)}' cannot be null or empty."))
-            .Ensure(email => email.Length <= MaxLength, Error.Invalid($"'{nameof(value)}' cannot be longer than {MaxLength} characters."))
+            .Ensure(email => !string.IsNullOrEmpty(email), Error.Invalid($"'{nameof(Email)}' cannot be null or empty."))
+            .Ensure(email => email.Length <= MaxLength, Error.Invalid($"'{nameof(Email)}' cannot be longer than {MaxLength} characters."))
             .Then(email => new Email(email));
 }
 
@@ -97,8 +97,8 @@ public sealed class UserName : SingleValueObject<string>
     public static Result<UserName> From(string value) =>
         Result<string>
             .With(value)
-            .Ensure(name => !string.IsNullOrEmpty(name), Error.Invalid($"'{nameof(value)}' cannot be null or empty."))
-            .Ensure(name => name.Length <= MaxLength, Error.Invalid($"'{nameof(value)}' cannot be longer than {MaxLength} characters."))
+            .Ensure(name => !string.IsNullOrEmpty(name), Error.Invalid($"'{nameof(UserName)}' cannot be null or empty."))
+            .Ensure(name => name.Length <= MaxLength, Error.Invalid($"'{nameof(UserName)}' cannot be longer than {MaxLength} characters."))
             .Then(name => new UserName(name));
 }
 
