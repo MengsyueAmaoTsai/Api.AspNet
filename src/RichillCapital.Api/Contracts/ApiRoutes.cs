@@ -52,4 +52,11 @@ public static class ApiRoutes
         public const string Get = $"{SignalSourcesBase}/{{signalSourceId}}";
         public const string Delete = $"{SignalSourcesBase}/{{signalSourceId}}";
     }
+
+    public static class Snapshots
+    {
+        private const string SnapshotsBase = $"{ApiBase}/snapshots";
+
+        public const string Create = SnapshotsBase;
+    }
 }
