@@ -9,4 +9,5 @@ internal static class ApiTags
     internal const string Orders = nameof(Orders);
     internal const string SignalSources = nameof(SignalSources);
     internal const string Snapshots = nameof(Snapshots);
+    internal const string SignalSubscriptions = nameof(SignalSubscriptions);
 }
