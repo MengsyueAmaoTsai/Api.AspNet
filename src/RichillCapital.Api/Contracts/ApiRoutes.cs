@@ -57,6 +57,7 @@ public static class ApiRoutes
     {
         private const string SnapshotsBase = $"{ApiBase}/snapshots";
 
+        public const string List = SnapshotsBase;
         public const string Create = SnapshotsBase;
     }
 }

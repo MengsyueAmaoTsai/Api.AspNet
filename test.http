@@ -17,3 +17,22 @@ Content-Type: application/json
     "orderTradeType": "Buy",
     "positionEntryComment": ""
 }
+
+
+### 
+GET https://localhost:10000/api/v1/snapshots
+
+{
+    "time": "2024-01-01T00:00:00",
+    "symbol": "BTCUSDT",
+    
+    "positionSide": "Flat",
+    "positionEntryPrice": 1,
+    "positionQuantity": 1,
+    "positionEntryTime": "2024-01-01T00:00:00",
+    "orderQuantity": 1,
+    "orderPrice": 0,
+    "orderType": "Market",
+    "orderTradeType": "Buy",
+    "positionEntryComment": ""
+}
