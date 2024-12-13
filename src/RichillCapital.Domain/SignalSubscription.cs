@@ -75,4 +75,10 @@ public static class SignalSubscriptionErrors
 {
     public static Error NotFound(SignalSubscriptionId id) =>
         Error.NotFound("SignalSubscriptions.NotFound", $"SignalSubscription with id {id} was not found.");
+
+    public static Error UserNotFound(UserId userId) =>
+        Error.NotFound("SignalSubscriptions.UserNotFound", $"User with id {userId} was not found.");
+
+    public static Error SignalSourceNotFound(SignalSourceId signalSourceId) =>
+        Error.NotFound("SignalSubscriptions.SignalSourceNotFound", $"SignalSource with id {signalSourceId} was not found.");
 }

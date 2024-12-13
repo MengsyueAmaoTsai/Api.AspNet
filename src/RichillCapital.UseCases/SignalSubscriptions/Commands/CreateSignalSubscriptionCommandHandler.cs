@@ -7,6 +7,8 @@ using RichillCapital.UseCases.Abstractions;
 namespace RichillCapital.UseCases.SignalSubscriptions.Commands;
 
 internal sealed class CreateSignalSubscriptionCommandHandler(
+    IReadOnlyRepository<User> _userRepository,
+    IReadOnlyRepository<SignalSource> _signalSourceRepository,
     IDateTimeProvider _dateTimeProvider,
     IRepository<SignalSubscription> _signalSubscriptionRepository,
     IUnitOfWork _unitOfWork) :
@@ -27,6 +29,16 @@ internal sealed class CreateSignalSubscriptionCommandHandler(
         }
 
         var (userId, signalSourceId) = validationResult.Value;
+
+        if (!await _userRepository.AnyAsync(u => u.Id == userId, cancellationToken))
+        {
+            return ErrorOr<SignalSubscriptionId>.WithError(SignalSubscriptionErrors.UserNotFound(userId));
+        }
+
+        if (!await _signalSourceRepository.AnyAsync(s => s.Id == signalSourceId, cancellationToken))
+        {
+            return ErrorOr<SignalSubscriptionId>.WithError(SignalSubscriptionErrors.SignalSourceNotFound(signalSourceId));
+        }
 
         var errorOrSignalSubscription = SignalSubscription
             .Create(
