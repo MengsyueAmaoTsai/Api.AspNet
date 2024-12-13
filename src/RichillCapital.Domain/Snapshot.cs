@@ -7,20 +7,35 @@ public sealed class Snapshot : Entity<SnapshotId>
 {
     private Snapshot(
         SnapshotId id,
+        SignalSourceId signalSourceId,
+        DateTimeOffset time,
+        int latency,
         DateTimeOffset createdTime)
         : base(id)
     {
+        SignalSourceId = signalSourceId;
+        Time = time;
+        Latency = latency;
         CreatedTime = createdTime;
     }
 
+    public SignalSourceId SignalSourceId { get; private set; }
+    public DateTimeOffset Time { get; private set; }
+    public int Latency { get; private set; }
     public DateTimeOffset CreatedTime { get; private set; }
 
     public static ErrorOr<Snapshot> Create(
         SnapshotId id,
+        SignalSourceId signalSourceId,
+        DateTimeOffset time,
+        int latency,
         DateTimeOffset createdTime)
     {
         var snapshot = new Snapshot(
             id,
+            signalSourceId,
+            time,
+            latency,
             createdTime);
 
         snapshot.RegisterDomainEvent(new SnapshotCreatedDomainEvent

@@ -5,6 +5,9 @@ namespace RichillCapital.Api.Contracts.Snapshots;
 public record SnapshotResponse
 {
     public required string Id { get; init; }
+    public required string SignalSourceId { get; init; }
+    public required DateTimeOffset Time { get; init; }
+    public required int Latency { get; init; }
     public required DateTimeOffset CreatedTime { get; init; }
 }
 
@@ -18,6 +21,9 @@ public static class SnapshotResponseMapping
         new()
         {
             Id = dto.Id,
+            SignalSourceId = dto.SignalSourceId,
+            Time = dto.Time,
+            Latency = dto.Latency,
             CreatedTime = dto.CreatedTime,
         };
 
@@ -25,6 +31,9 @@ public static class SnapshotResponseMapping
         new()
         {
             Id = dto.Id,
+            SignalSourceId = dto.SignalSourceId,
+            Time = dto.Time,
+            Latency = dto.Latency,
             CreatedTime = dto.CreatedTime,
         };
 }

@@ -20,5 +20,13 @@ internal sealed class SnapshotConfiguration : IEntityTypeConfiguration<Snapshot>
                 snapshotId => snapshotId.Value,
                 value => SnapshotId.From(value).ThrowIfFailure().Value)
             .IsRequired();
+
+        builder
+            .Property(snapshot => snapshot.SignalSourceId)
+            .HasMaxLength(SignalSourceId.MaxLength)
+            .HasConversion(
+                signalSourceId => signalSourceId.Value,
+                value => SignalSourceId.From(value).ThrowIfFailure().Value)
+            .IsRequired();
     }
 }

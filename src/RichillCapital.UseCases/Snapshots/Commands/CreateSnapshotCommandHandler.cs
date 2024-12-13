@@ -16,8 +16,23 @@ internal sealed class CreateSnapshotCommandHandler(
         CreateSnapshotCommand command,
         CancellationToken cancellationToken)
     {
+        var validationResult = SignalSourceId.From(command.SignalSourceId);
+
+        if (validationResult.IsFailure)
+        {
+            return ErrorOr<SnapshotId>.WithError(validationResult.Error);
+        }
+
+        var sourceId = validationResult.Value;
+        var createdTime = _dateTimeProvider.UtcNow;
+
+        var latency = (int)(createdTime - command.Time).TotalMilliseconds;
+
         var errorOrSnapshot = Snapshot.Create(
             id: SnapshotId.NewSnapshotId(),
+            signalSourceId: sourceId,
+            time: command.Time,
+            latency: latency,
             createdTime: _dateTimeProvider.UtcNow);
 
         if (errorOrSnapshot.HasError)

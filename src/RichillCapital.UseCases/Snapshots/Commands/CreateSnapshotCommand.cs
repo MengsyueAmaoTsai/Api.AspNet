@@ -6,4 +6,6 @@ namespace RichillCapital.UseCases.Snapshots.Commands;
 
 public sealed record CreateSnapshotCommand : ICommand<ErrorOr<SnapshotId>>
 {
+    public required string SignalSourceId { get; init; }
+    public required DateTimeOffset Time { get; init; }
 }

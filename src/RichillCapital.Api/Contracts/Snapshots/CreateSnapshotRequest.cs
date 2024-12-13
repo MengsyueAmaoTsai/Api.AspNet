@@ -2,6 +2,9 @@ namespace RichillCapital.Api.Contracts.Snapshots;
 
 public sealed record CreateSnapshotRequest
 {
+    public required string SignalSourceId { get; init; }
+    public required DateTimeOffset Time { get; init; }
+
     public required string PositionSide { get; init; }
     public required decimal PositionQuantity { get; init; }
     public required decimal PositionEntryPrice { get; init; }

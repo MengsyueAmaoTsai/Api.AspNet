@@ -31,6 +31,8 @@ public sealed class CreateSnapshotEndpoint(
             .With(request)
             .Then(req => new CreateSnapshotCommand
             {
+                SignalSourceId = req.SignalSourceId,
+                Time = req.Time,
             })
             .Then(command => _mediator.Send(command, cancellationToken))
             .Then(id => new SnapshotCreatedResponse { Id = id.Value })
