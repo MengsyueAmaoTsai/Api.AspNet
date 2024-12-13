@@ -10,6 +10,7 @@ public sealed class Snapshot : Entity<SnapshotId>
         SignalSourceId signalSourceId,
         DateTimeOffset time,
         int latency,
+        Symbol symbol,
         DateTimeOffset barTime,
         decimal lastPrice,
         DateTimeOffset createdTime)
@@ -18,6 +19,7 @@ public sealed class Snapshot : Entity<SnapshotId>
         SignalSourceId = signalSourceId;
         Time = time;
         Latency = latency;
+        Symbol = symbol;
         BarTime = barTime;
         LastPrice = lastPrice;
         CreatedTime = createdTime;
@@ -26,6 +28,8 @@ public sealed class Snapshot : Entity<SnapshotId>
     public SignalSourceId SignalSourceId { get; private set; }
     public DateTimeOffset Time { get; private set; }
     public int Latency { get; private set; }
+
+    public Symbol Symbol { get; private set; }
     public DateTimeOffset BarTime { get; private set; }
     public decimal LastPrice { get; private set; }
     public DateTimeOffset CreatedTime { get; private set; }
@@ -35,6 +39,7 @@ public sealed class Snapshot : Entity<SnapshotId>
         SignalSourceId signalSourceId,
         DateTimeOffset time,
         int latency,
+        Symbol symbol,
         DateTimeOffset barTime,
         decimal lastPrice,
         DateTimeOffset createdTime)
@@ -44,6 +49,7 @@ public sealed class Snapshot : Entity<SnapshotId>
             signalSourceId,
             time,
             latency,
+            symbol,
             barTime,
             lastPrice,
             createdTime);

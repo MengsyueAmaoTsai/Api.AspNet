@@ -33,6 +33,7 @@ public sealed class CreateSnapshotEndpoint(
             {
                 SignalSourceId = req.SignalSourceId,
                 Time = req.Time,
+                Symbol = req.Symbol,
                 BarTime = req.BarTime,
                 LastPrice = req.LastPrice,
             })

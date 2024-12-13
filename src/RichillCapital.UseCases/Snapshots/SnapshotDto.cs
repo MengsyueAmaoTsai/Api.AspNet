@@ -9,6 +9,7 @@ public sealed record SnapshotDto
     public required DateTimeOffset Time { get; init; }
     public required int Latency { get; init; }
 
+    public required string Symbol { get; init; }
     public required DateTimeOffset BarTime { get; init; }
     public required decimal LastPrice { get; init; }
 
@@ -24,6 +25,7 @@ internal static class SnapshotExtensions
             SignalSourceId = snapshot.SignalSourceId.Value,
             Time = snapshot.Time,
             Latency = snapshot.Latency,
+            Symbol = snapshot.Symbol.Value,
             BarTime = snapshot.BarTime,
             LastPrice = snapshot.LastPrice,
             CreatedTime = snapshot.CreatedTime,

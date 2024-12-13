@@ -16,14 +16,17 @@ internal sealed class CreateSnapshotCommandHandler(
         CreateSnapshotCommand command,
         CancellationToken cancellationToken)
     {
-        var validationResult = SignalSourceId.From(command.SignalSourceId);
+        var validationResult = Result<(SignalSourceId, Symbol)>
+            .Combine(
+                SignalSourceId.From(command.SignalSourceId),
+                Symbol.From(command.Symbol));
 
         if (validationResult.IsFailure)
         {
             return ErrorOr<SnapshotId>.WithError(validationResult.Error);
         }
 
-        var sourceId = validationResult.Value;
+        var (sourceId, symbol) = validationResult.Value;
         var createdTime = _dateTimeProvider.UtcNow;
 
         var latency = (int)(createdTime - command.Time).TotalMilliseconds;
@@ -33,6 +36,7 @@ internal sealed class CreateSnapshotCommandHandler(
             signalSourceId: sourceId,
             time: command.Time,
             latency: latency,
+            symbol: symbol,
             barTime: command.BarTime,
             lastPrice: command.LastPrice,
             createdTime: _dateTimeProvider.UtcNow);

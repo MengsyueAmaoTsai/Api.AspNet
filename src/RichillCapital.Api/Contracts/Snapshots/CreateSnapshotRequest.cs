@@ -5,6 +5,7 @@ public sealed record CreateSnapshotRequest
     public required string SignalSourceId { get; init; }
     public required DateTimeOffset Time { get; init; }
 
+    public required string Symbol { get; init; }
     public required DateTimeOffset BarTime { get; init; }
     public required decimal LastPrice { get; init; }
 

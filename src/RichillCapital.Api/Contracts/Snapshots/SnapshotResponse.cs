@@ -9,6 +9,7 @@ public record SnapshotResponse
     public required DateTimeOffset Time { get; init; }
     public required int Latency { get; init; }
 
+    public required string Symbol { get; init; }
     public required DateTimeOffset BarTime { get; init; }
     public required decimal LastPrice { get; init; }
 
@@ -28,6 +29,7 @@ public static class SnapshotResponseMapping
             SignalSourceId = dto.SignalSourceId,
             Time = dto.Time,
             Latency = dto.Latency,
+            Symbol = dto.Symbol,
             BarTime = dto.BarTime,
             LastPrice = dto.LastPrice,
             CreatedTime = dto.CreatedTime,
@@ -40,6 +42,7 @@ public static class SnapshotResponseMapping
             SignalSourceId = dto.SignalSourceId,
             Time = dto.Time,
             Latency = dto.Latency,
+            Symbol = dto.Symbol,
             BarTime = dto.BarTime,
             LastPrice = dto.LastPrice,
             CreatedTime = dto.CreatedTime,
