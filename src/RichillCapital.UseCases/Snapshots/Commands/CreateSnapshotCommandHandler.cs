@@ -33,6 +33,8 @@ internal sealed class CreateSnapshotCommandHandler(
             signalSourceId: sourceId,
             time: command.Time,
             latency: latency,
+            barTime: command.BarTime,
+            lastPrice: command.LastPrice,
             createdTime: _dateTimeProvider.UtcNow);
 
         if (errorOrSnapshot.HasError)

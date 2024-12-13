@@ -33,6 +33,8 @@ public sealed class CreateSnapshotEndpoint(
             {
                 SignalSourceId = req.SignalSourceId,
                 Time = req.Time,
+                BarTime = req.BarTime,
+                LastPrice = req.LastPrice,
             })
             .Then(command => _mediator.Send(command, cancellationToken))
             .Then(id => new SnapshotCreatedResponse { Id = id.Value })

@@ -7,6 +7,9 @@ Content-Type: application/json
     "signalSourceId": "TV-DEMO-LONG",
     "time": "2024-01-01T00:00:00",
     "symbol": "BTCUSDT",
+
+    "barTime": "2024-01-01T00:00:00",
+    "lastPrice": 1,
     
     "positionSide": "Flat",
     "positionEntryPrice": 1,
@@ -19,6 +22,3 @@ Content-Type: application/json
     "positionEntryComment": ""
 }
 
-
-### 
-GET https://localhost:10000/api/v1/snapshots
