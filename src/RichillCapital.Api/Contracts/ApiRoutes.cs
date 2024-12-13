@@ -42,6 +42,14 @@ public static class ApiRoutes
         public const string Delete = $"{AccountBase}/{{accountId}}";
     }
 
+    public static class Orders
+    {
+        private const string OrdersBase = $"{ApiBase}/orders";
+
+        public const string List = OrdersBase;
+        public const string Create = OrdersBase;
+    }
+
     // Automated trading
     public static class SignalSources
     {

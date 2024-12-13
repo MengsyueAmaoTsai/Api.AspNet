@@ -58,6 +58,9 @@ public sealed class OrderId : SingleValueObject<string>
             .Ensure(id => !string.IsNullOrEmpty(id), Error.Invalid($"'{nameof(OrderId)}' cannot be null or empty."))
             .Ensure(id => id.Length <= MaxLength, Error.Invalid($"'{nameof(OrderId)}' cannot be greater than {MaxLength} characters."))
             .Then(id => new OrderId(id));
+
+    public static OrderId NewOrderId() =>
+        From(Guid.NewGuid().ToString()).Value;
 }
 
 public abstract record OrderDomainEvent : DomainEvent
