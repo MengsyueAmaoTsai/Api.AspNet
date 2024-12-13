@@ -36,5 +36,28 @@ internal sealed class SignalSubscriptionConfiguration : IEntityTypeConfiguration
                 id => id.Value,
                 value => SignalSourceId.From(value).ThrowIfFailure().Value)
             .IsRequired();
+
+        builder.HasData([
+            CreateSignalSubscription(
+                id: "1",
+                userId: "UID0000001",
+                signalSourceId: "TV-DEMO-LONG"),
+            CreateSignalSubscription(
+                id: "2",
+                userId: "UID0000001",
+                signalSourceId: "TV-DEMO-SHORT"),
+        ]);
     }
+
+    private static SignalSubscription CreateSignalSubscription(
+        string id,
+        string userId,
+        string signalSourceId) => SignalSubscription
+        .Create(
+            id: SignalSubscriptionId.From(id).ThrowIfFailure().Value,
+            userId: UserId.From(userId).ThrowIfFailure().Value,
+            signalSourceId: SignalSourceId.From(signalSourceId).ThrowIfFailure().Value,
+            createdTime: DateTimeOffset.UtcNow)
+        .ThrowIfError()
+        .Value;
 }
