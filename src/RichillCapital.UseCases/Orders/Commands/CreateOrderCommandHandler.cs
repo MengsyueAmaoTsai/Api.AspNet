@@ -8,6 +8,8 @@ namespace RichillCapital.UseCases.Orders.Commands;
 
 internal sealed class CreateOrderCommandHandler(
     IDateTimeProvider _dateTimeProvider,
+    IReadOnlyRepository<Account> _accountRepository,
+    IReadOnlyRepository<Instrument> _instrumentRepository,
     IRepository<Order> _orderRepository,
     IUnitOfWork _unitOfWork) :
     ICommandHandler<CreateOrderCommand, ErrorOr<OrderId>>
@@ -27,6 +29,16 @@ internal sealed class CreateOrderCommandHandler(
         }
 
         var (accountId, symbol) = validationResult.Value;
+
+        if (!await _accountRepository.AnyAsync(a => a.Id == accountId))
+        {
+            return ErrorOr<OrderId>.WithError(OrderErrors.AccountNotFound(accountId));
+        }
+
+        if (!await _instrumentRepository.AnyAsync(i => i.Symbol == symbol))
+        {
+            return ErrorOr<OrderId>.WithError(OrderErrors.InstrumentNotFound(symbol));
+        }
 
         var errorOrOrder = Order.Create(
             id: OrderId.NewOrderId(),

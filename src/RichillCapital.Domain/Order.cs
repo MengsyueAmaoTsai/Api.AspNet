@@ -76,4 +76,10 @@ public static class OrderErrors
 {
     public static Error NotFound(OrderId id) =>
         Error.NotFound("Orders.NotFound", $"Order with id '{id}' was not found.");
+
+    public static Error AccountNotFound(AccountId id) =>
+        Error.NotFound("Orders.AccountNotFound", $"Account with id '{id}' was not found.");
+
+    public static Error InstrumentNotFound(Symbol symbol) =>
+        Error.NotFound("Orders.InstrumentNotFound", $"Instrument with symbol '{symbol}' was not found.");
 }
