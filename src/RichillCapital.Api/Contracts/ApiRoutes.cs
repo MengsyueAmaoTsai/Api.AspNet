@@ -20,6 +20,20 @@ public static class ApiRoutes
         public const string Delete = $"{UsersBase}/{{userId}}";
     }
 
+    public static class DataFeeds
+    {
+        private const string DataFeedsBase = $"{ApiBase}/data-feeds";
+
+        public const string List = DataFeedsBase;
+    }
+
+    public static class Brokerages
+    {
+        private const string BrokeragesBase = $"{ApiBase}/brokerages";
+
+        public const string List = BrokeragesBase;
+    }
+
     // Market data
     public static class Instruments
     {
