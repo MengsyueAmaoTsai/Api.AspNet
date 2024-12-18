@@ -57,9 +57,10 @@ if (app.Environment.IsProduction())
     app.UseHttpsRedirection();
 }
 
+app.UseCors("AllowAnyOrigin");
+
 app.UseRouting();
 
-app.UseCors("AllowAnyOrigin");
 
 app.UseSwaggerDoc();
 

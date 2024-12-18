@@ -39,6 +39,12 @@ internal sealed class SignalSourceConfiguration : IEntityTypeConfiguration<Signa
                 description: "TradingView Demo Short Signal Source",
                 version: "1.0.0",
                 SignalSourceStage.Simulation),
+            CreateSignalSource(
+                id: "CT-DEMO-LONG",
+                name: "CT-DEMO-LONG",
+                description: "CTrader Demo Long Signal Source",
+                version: "1.0.0",
+                SignalSourceStage.Simulation),
 
             CreateSignalSource(
                 id: "TV-BINANCE:BTCUSDT.P-M15L-001",
