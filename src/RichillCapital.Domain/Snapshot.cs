@@ -92,6 +92,9 @@ public static class SnapshotErrors
 {
     public static Error NotFound(SnapshotId id) =>
         Error.NotFound("Snapshots.NotFound", $"Snapshot with ID '{id}' was not found.");
+
+    public static Error SourceNotExists(SignalSourceId id) =>
+        Error.NotFound("Snapshots.SourceNotExists", $"Signal source with ID '{id}' not exists.");
 }
 
 public abstract record SnapshotDomainEvent : DomainEvent

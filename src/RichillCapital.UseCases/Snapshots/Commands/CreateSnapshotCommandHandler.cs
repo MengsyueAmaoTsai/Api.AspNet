@@ -8,6 +8,7 @@ namespace RichillCapital.UseCases.Snapshots.Commands;
 
 internal sealed class CreateSnapshotCommandHandler(
     IDateTimeProvider _dateTimeProvider,
+    IReadOnlyRepository<SignalSource> _signalSourceRepository,
     IRepository<Snapshot> _snapshotRepository,
     IUnitOfWork _unitOfWork) :
     ICommandHandler<CreateSnapshotCommand, ErrorOr<SnapshotId>>
@@ -27,6 +28,17 @@ internal sealed class CreateSnapshotCommandHandler(
         }
 
         var (sourceId, symbol) = validationResult.Value;
+
+        // validate if signal source exists
+        var maybeSignalSource = await _signalSourceRepository.FirstOrDefaultAsync(
+            s => s.Id == sourceId,
+            cancellationToken);
+
+        if (maybeSignalSource.IsNull)
+        {
+            return ErrorOr<SnapshotId>.WithError(SnapshotErrors.SourceNotExists(sourceId));
+        }
+
         var createdTime = _dateTimeProvider.UtcNow;
 
         var latency = (int)(createdTime - command.Time).TotalMilliseconds;
