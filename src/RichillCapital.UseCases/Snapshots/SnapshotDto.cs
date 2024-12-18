@@ -12,6 +12,7 @@ public sealed record SnapshotDto
     public required string Symbol { get; init; }
     public required DateTimeOffset BarTime { get; init; }
     public required decimal LastPrice { get; init; }
+    public required string Message { get; init; }
 
     public required DateTimeOffset CreatedTime { get; init; }
 }
@@ -28,6 +29,7 @@ internal static class SnapshotExtensions
             Symbol = snapshot.Symbol.Value,
             BarTime = snapshot.BarTime,
             LastPrice = snapshot.LastPrice,
+            Message = snapshot.Message,
             CreatedTime = snapshot.CreatedTime,
         };
 }

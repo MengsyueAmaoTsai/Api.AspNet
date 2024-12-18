@@ -39,6 +39,7 @@ internal sealed class CreateSnapshotCommandHandler(
             symbol: symbol,
             barTime: command.BarTime,
             lastPrice: command.LastPrice,
+            message: command.Message,
             createdTime: _dateTimeProvider.UtcNow);
 
         if (errorOrSnapshot.HasError)

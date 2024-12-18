@@ -12,6 +12,7 @@ public record SnapshotResponse
     public required string Symbol { get; init; }
     public required DateTimeOffset BarTime { get; init; }
     public required decimal LastPrice { get; init; }
+    public required string Message { get; init; }
 
     public required DateTimeOffset CreatedTime { get; init; }
 }
@@ -32,6 +33,7 @@ public static class SnapshotResponseMapping
             Symbol = dto.Symbol,
             BarTime = dto.BarTime,
             LastPrice = dto.LastPrice,
+            Message = dto.Message,
             CreatedTime = dto.CreatedTime,
         };
 
@@ -45,6 +47,7 @@ public static class SnapshotResponseMapping
             Symbol = dto.Symbol,
             BarTime = dto.BarTime,
             LastPrice = dto.LastPrice,
+            Message = dto.Message,
             CreatedTime = dto.CreatedTime,
         };
 }

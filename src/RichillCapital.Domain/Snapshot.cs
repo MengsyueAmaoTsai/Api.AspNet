@@ -13,6 +13,7 @@ public sealed class Snapshot : Entity<SnapshotId>
         Symbol symbol,
         DateTimeOffset barTime,
         decimal lastPrice,
+        string message,
         DateTimeOffset createdTime)
         : base(id)
     {
@@ -22,6 +23,7 @@ public sealed class Snapshot : Entity<SnapshotId>
         Symbol = symbol;
         BarTime = barTime;
         LastPrice = lastPrice;
+        Message = message;
         CreatedTime = createdTime;
     }
 
@@ -32,6 +34,7 @@ public sealed class Snapshot : Entity<SnapshotId>
     public Symbol Symbol { get; private set; }
     public DateTimeOffset BarTime { get; private set; }
     public decimal LastPrice { get; private set; }
+    public string Message { get; private set; }
     public DateTimeOffset CreatedTime { get; private set; }
 
     public static ErrorOr<Snapshot> Create(
@@ -42,6 +45,7 @@ public sealed class Snapshot : Entity<SnapshotId>
         Symbol symbol,
         DateTimeOffset barTime,
         decimal lastPrice,
+        string message,
         DateTimeOffset createdTime)
     {
         var snapshot = new Snapshot(
@@ -52,6 +56,7 @@ public sealed class Snapshot : Entity<SnapshotId>
             symbol,
             barTime,
             lastPrice,
+            message,
             createdTime);
 
         snapshot.RegisterDomainEvent(new SnapshotCreatedDomainEvent

@@ -12,4 +12,5 @@ public sealed record CreateSnapshotCommand : ICommand<ErrorOr<SnapshotId>>
     public required string Symbol { get; init; }
     public required DateTimeOffset BarTime { get; init; }
     public required decimal LastPrice { get; init; }
+    public required string Message { get; init; }
 }
