@@ -84,6 +84,32 @@ internal sealed class SignalSourceConfiguration : IEntityTypeConfiguration<Signa
                 description: "",
                 version: "1.0.0",
                 SignalSourceStage.Simulation),
+
+            CreateSignalSource(
+                id: "CT-PEPPERSTONE:NAS100-M15L-001",
+                name: "",
+                description: "",
+                version: "1.0.0",
+                SignalSourceStage.Simulation),
+            CreateSignalSource(
+                id: "CT-PEPPERSTONE:NAS100-M15S-001",
+                name: "",
+                description: "",
+                version: "1.0.0",
+                SignalSourceStage.Simulation),
+
+            CreateSignalSource(
+                id: "CT-PEPPERSTONE:GER40-M15L-001",
+                name: "",
+                description: "",
+                version: "1.0.0",
+                SignalSourceStage.Simulation),
+            CreateSignalSource(
+                id: "CT-PEPPERSTONE:GER40-M15S-001",
+                name: "",
+                description: "",
+                version: "1.0.0",
+                SignalSourceStage.Simulation),
         ]);
     }
 
