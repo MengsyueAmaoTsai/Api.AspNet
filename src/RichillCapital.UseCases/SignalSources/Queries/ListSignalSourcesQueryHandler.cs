@@ -17,6 +17,7 @@ internal sealed class ListSignalSourcesQueryHandler(
 
         var dtos = sources
             .Select(s => s.ToDto())
+            .OrderBy(s => s.CreatedTime)
             .ToList();
 
         return ErrorOr<IEnumerable<SignalSourceDto>>.With(dtos);
