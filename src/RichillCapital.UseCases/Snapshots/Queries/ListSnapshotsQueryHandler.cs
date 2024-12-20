@@ -16,6 +16,7 @@ internal sealed class ListSnapshotsQueryHandler(IReadOnlyRepository<Snapshot> _r
 
         var dtos = snapshots
             .Select(s => s.ToDto())
+            .OrderByDescending(s => s.Time)
             .ToList();
 
         return ErrorOr<IEnumerable<SnapshotDto>>.With(dtos);
