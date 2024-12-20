@@ -54,9 +54,17 @@ public sealed class GetSnapshotStatisticsEndpoint(
                 Min = min,
                 StandardDeviation = std,
                 normals = latencyCounts.GetValueOrDefault("Normal", 0),
+                normalPercentage = Math.Round(
+                    (double)latencyCounts.GetValueOrDefault("Normal", 0) / latencies.Count * 100, 2),
                 minors = latencyCounts.GetValueOrDefault("Minor", 0),
+                minorPercentage = Math.Round(
+                    (double)latencyCounts.GetValueOrDefault("Minor", 0) / latencies.Count * 100, 2),
                 moderates = latencyCounts.GetValueOrDefault("Moderate", 0),
-                severes = latencyCounts.GetValueOrDefault("Severe", 0)
+                moderatePercentage = Math.Round(
+                    (double)latencyCounts.GetValueOrDefault("Moderate", 0) / latencies.Count * 100, 2),
+                severes = latencyCounts.GetValueOrDefault("Severe", 0),
+                severePercentage = Math.Round(
+                    (double)latencyCounts.GetValueOrDefault("Severe", 0) / latencies.Count * 100, 2),
             }
         });
     }
@@ -77,7 +85,7 @@ public sealed class GetSnapshotStatisticsEndpoint(
     private string ClassifyLatency(Latency latency)
     {
         var defaultMean = 2500m;
-        var defaultStandardDeviation = 2500m;
+        var defaultStandardDeviation = 1500m;
 
         if (latency.Value >= (defaultMean - defaultStandardDeviation)
             && latency.Value <= (defaultMean + defaultStandardDeviation))

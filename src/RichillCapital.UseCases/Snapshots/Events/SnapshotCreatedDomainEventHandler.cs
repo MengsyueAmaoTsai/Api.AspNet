@@ -4,12 +4,15 @@ using System.Text.Json;
 using Microsoft.Extensions.Logging;
 
 using RichillCapital.Domain;
+using RichillCapital.Domain.Abstractions.Repositories;
+using RichillCapital.SharedKernel.Monads;
 using RichillCapital.UseCases.Abstractions;
 
 namespace RichillCapital.UseCases.Snapshots.Events;
 
 internal sealed class SnapshotCreatedDomainEventHandler(
-    ILogger<SnapshotCreatedDomainEventHandler> _logger) :
+    ILogger<SnapshotCreatedDomainEventHandler> _logger,
+    IReadOnlyRepository<SignalSource> _signalSourceRepository) :
     IDomainEventHandler<SnapshotCreatedDomainEvent>
 {
     public async Task Handle(
@@ -19,6 +22,20 @@ internal sealed class SnapshotCreatedDomainEventHandler(
         _logger.LogInformation(
             "Snapshot with ID '{SnapshotId}' was created.",
             domainEvent.SnapshotId);
+
+        var maybeSource = await _signalSourceRepository
+            .FirstOrDefaultAsync(
+                source => source.Id == domainEvent.SignalSourceId,
+                cancellationToken)
+            .ThrowIfNull();
+
+        var source = maybeSource.Value;
+
+        if (source.Stage == SignalSourceStage.Development ||
+            source.Stage == SignalSourceStage.BackTesting)
+        {
+            return;
+        }
 
         await NotificationAsync(domainEvent);
     }
@@ -76,7 +93,7 @@ internal sealed class SnapshotCreatedDomainEventHandler(
 
     private async Task SendToSlackAsync(string message)
     {
-        var slackWebhookUrl = "https://hooks.slack.com/services/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";
+        var slackWebhookUrl = "https://hooks.slack.com/services/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";
 
         var slackMessage = new
         {
