@@ -62,6 +62,13 @@ public sealed class Snapshot : Entity<SnapshotId>
         snapshot.RegisterDomainEvent(new SnapshotCreatedDomainEvent
         {
             SnapshotId = id,
+            SignalSourceId = signalSourceId,
+            Time = time,
+            Latency = latency,
+            Symbol = symbol,
+            BarTime = barTime,
+            LastPrice = lastPrice,
+            Message = message,
         });
 
         return ErrorOr<Snapshot>.With(snapshot);
@@ -104,5 +111,12 @@ public abstract record SnapshotDomainEvent : DomainEvent
 
 public sealed record SnapshotCreatedDomainEvent : SnapshotDomainEvent
 {
+    public required SignalSourceId SignalSourceId { get; init; }
+    public required DateTimeOffset Time { get; init; }
+    public required int Latency { get; init; }
+    public required Symbol Symbol { get; init; }
+    public required DateTimeOffset BarTime { get; init; }
+    public required decimal LastPrice { get; init; }
+    public required string Message { get; init; }
 }
 

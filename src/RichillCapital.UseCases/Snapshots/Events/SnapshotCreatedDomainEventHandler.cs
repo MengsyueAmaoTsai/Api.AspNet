@@ -20,16 +20,28 @@ internal sealed class SnapshotCreatedDomainEventHandler(
             "Snapshot with ID '{SnapshotId}' was created.",
             domainEvent.SnapshotId);
 
-        await NotificationAsync(domainEvent);
+        var content = new StringBuilder()
+            .AppendLine($"Time: {domainEvent.Time:yyyy-MM-dd HH:mm:ss.fff}")
+            .AppendLine($"Snapshot from source: {domainEvent.SignalSourceId}")
+            .AppendLine("--------------- Data set ---------------")
+            .AppendLine($"Symbol: {domainEvent.Symbol}")
+            .AppendLine($"Bar time: {domainEvent.BarTime:yyyy-MM-dd HH:mm:ss.fff}")
+            .AppendLine($"Last price: {domainEvent.LastPrice}")
+            .AppendLine("--------------- Order ---------------")
+            .AppendLine("--------------- Position ---------------")
+            .AppendLine("--------------- Additional info ---------------")
+            .AppendLine($"Latency: {domainEvent.Latency} ms")
+            .AppendLine(string.IsNullOrEmpty(domainEvent.Message) ? string.Empty : domainEvent.Message)
+            .ToString();
+
+        await NotificationAsync(content);
     }
 
-    private async Task NotificationAsync(SnapshotCreatedDomainEvent domainEvent)
+    private async Task NotificationAsync(string content)
     {
-        var message = $"Snapshot with ID '{domainEvent.SnapshotId}' was created.";
-
-        await SendToSlackAsync(message);
-        await SendToDiscordWebhookAsync(message);
-        await SendToTelegramAsync(message);
+        await SendToSlackAsync(content);
+        await SendToDiscordWebhookAsync(content);
+        await SendToTelegramAsync(content);
     }
 
     private async Task SendToTelegramAsync(string message)
