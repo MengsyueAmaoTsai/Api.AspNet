@@ -20,9 +20,14 @@ internal sealed class SnapshotCreatedDomainEventHandler(
             "Snapshot with ID '{SnapshotId}' was created.",
             domainEvent.SnapshotId);
 
+        await NotificationAsync(domainEvent);
+    }
+
+    private async Task NotificationAsync(SnapshotCreatedDomainEvent domainEvent)
+    {
         var content = new StringBuilder()
             .AppendLine($"Time: {domainEvent.Time:yyyy-MM-dd HH:mm:ss.fff}")
-            .AppendLine($"Snapshot from source: {domainEvent.SignalSourceId}")
+            .AppendLine($"Source: {domainEvent.SignalSourceId}")
             .AppendLine("--------------- Data set ---------------")
             .AppendLine($"Symbol: {domainEvent.Symbol}")
             .AppendLine($"Bar time: {domainEvent.BarTime:yyyy-MM-dd HH:mm:ss.fff}")
@@ -34,11 +39,6 @@ internal sealed class SnapshotCreatedDomainEventHandler(
             .AppendLine(string.IsNullOrEmpty(domainEvent.Message) ? string.Empty : domainEvent.Message)
             .ToString();
 
-        await NotificationAsync(content);
-    }
-
-    private async Task NotificationAsync(string content)
-    {
         await SendToSlackAsync(content);
         await SendToDiscordWebhookAsync(content);
         await SendToTelegramAsync(content);
