@@ -32,90 +32,121 @@ internal sealed class SignalSourceConfiguration : IEntityTypeConfiguration<Signa
                 name: "TV-DEMO-LONG",
                 description: "TradingView Demo Long Signal Source",
                 version: "1.0.0",
-                SignalSourceStage.Development),
+                stage: SignalSourceStage.Development,
+                createdTime: new DateTimeOffset(2021, 1, 1, 0, 0, 0, TimeSpan.Zero)),
+
             CreateSignalSource(
                 id: "TV-DEMO-SHORT",
                 name: "TV-DEMO-SHORT",
                 description: "TradingView Demo Short Signal Source",
                 version: "1.0.0",
-                SignalSourceStage.Development),
+                stage: SignalSourceStage.Development,
+                createdTime: new DateTimeOffset(2021, 1, 1, 0, 0, 1, TimeSpan.Zero)),
             CreateSignalSource(
                 id: "CT-DEMO-LONG",
                 name: "CT-DEMO-LONG",
                 description: "CTrader Demo Long Signal Source",
                 version: "1.0.0",
-                SignalSourceStage.Development),
+                stage: SignalSourceStage.Development,
+                createdTime: new DateTimeOffset(2021, 1, 1, 0, 0, 2, TimeSpan.Zero)),
+
             CreateSignalSource(
-                id: "CT-DEMO-Short",
-                name: "CT-DEMO-Short",
+                id: "CT-DEMO-SHORT",
+                name: "CT-DEMO-SHORT",
                 description: "CTrader Demo Short Signal Source",
                 version: "1.0.0",
-                SignalSourceStage.Development),
+                stage: SignalSourceStage.Development,
+                createdTime: new DateTimeOffset(2021, 1, 1, 0, 0, 3, TimeSpan.Zero)),
 
             CreateSignalSource(
                 id: "TV-BINANCE:BTCUSDT.P-M15L-001",
                 name: "",
                 description: "",
                 version: "1.0.0",
-                SignalSourceStage.Simulation),
+                stage: SignalSourceStage.Simulation,
+                createdTime: new DateTimeOffset(2021, 1, 1, 0, 0, 4, TimeSpan.Zero)),
             CreateSignalSource(
                 id: "TV-BINANCE:BTCUSDT.P-M15S-001",
                 name: "",
                 description: "",
                 version: "1.0.0",
-                SignalSourceStage.Simulation),
+                stage: SignalSourceStage.Simulation,
+                createdTime: new DateTimeOffset(2021, 1, 1, 0, 0, 5, TimeSpan.Zero)),
 
             CreateSignalSource(
                 id: "TV-BINANCE:ETHUSDT.P-M15L-001",
                 name: "",
                 description: "",
                 version: "1.0.0",
-                SignalSourceStage.Simulation),
+                stage: SignalSourceStage.Simulation,
+                createdTime: new DateTimeOffset(2021, 1, 1, 0, 0, 6, TimeSpan.Zero)),
             CreateSignalSource(
                 id: "TV-BINANCE:ETHUSDT.P-M15S-001",
                 name: "",
                 description: "",
                 version: "1.0.0",
-                SignalSourceStage.Simulation),
+                stage: SignalSourceStage.Simulation,
+                createdTime: new DateTimeOffset(2021, 1, 1, 0, 0, 7, TimeSpan.Zero)),
 
             CreateSignalSource(
                 id: "TV-BINANCE:SOLUSDT.P-M15L-001",
                 name: "",
                 description: "",
                 version: "1.0.0",
-                SignalSourceStage.Simulation),
+                stage: SignalSourceStage.Simulation,
+                createdTime: new DateTimeOffset(2021, 1, 1, 0, 0, 8, TimeSpan.Zero)),
             CreateSignalSource(
                 id: "TV-BINANCE:SOLUSDT.P-M15S-001",
                 name: "",
                 description: "",
                 version: "1.0.0",
-                SignalSourceStage.Simulation),
+                stage: SignalSourceStage.Simulation,
+                createdTime: new DateTimeOffset(2021, 1, 1, 0, 0, 9, TimeSpan.Zero)),
 
             CreateSignalSource(
                 id: "CT-PEPPERSTONE:NAS100-M15L-001",
                 name: "",
                 description: "",
                 version: "1.0.0",
-                SignalSourceStage.Simulation),
+                stage: SignalSourceStage.Simulation,
+                createdTime: new DateTimeOffset(2021, 1, 1, 0, 0, 10, TimeSpan.Zero)),
             CreateSignalSource(
                 id: "CT-PEPPERSTONE:NAS100-M15S-001",
                 name: "",
                 description: "",
                 version: "1.0.0",
-                SignalSourceStage.Simulation),
+                stage: SignalSourceStage.Simulation,
+                createdTime: new DateTimeOffset(2021, 1, 1, 0, 0, 11, TimeSpan.Zero)),
 
             CreateSignalSource(
                 id: "CT-PEPPERSTONE:GER40-M15L-001",
                 name: "",
                 description: "",
                 version: "1.0.0",
-                SignalSourceStage.Simulation),
+                stage: SignalSourceStage.Simulation,
+                createdTime: new DateTimeOffset(2021, 1, 1, 0, 0, 12, TimeSpan.Zero)),
             CreateSignalSource(
                 id: "CT-PEPPERSTONE:GER40-M15S-001",
                 name: "",
                 description: "",
                 version: "1.0.0",
-                SignalSourceStage.Simulation),
+                stage: SignalSourceStage.Simulation,
+                createdTime: new DateTimeOffset(2021, 1, 1, 0, 0, 13, TimeSpan.Zero)),
+
+            CreateSignalSource(
+                id: "CT-PEPPERSTONE:HK50-M15L-001",
+                name: "",
+                description: "",
+                version: "1.0.0",
+                stage: SignalSourceStage.Simulation,
+                createdTime: new DateTimeOffset(2021, 1, 1, 0, 0, 14, TimeSpan.Zero)),
+            CreateSignalSource(
+                id: "CT-PEPPERSTONE:HK50-M15S-001",
+                name: "",
+                description: "",
+                version: "1.0.0",
+                stage: SignalSourceStage.Simulation,
+                createdTime: new DateTimeOffset(2021, 1, 1, 0, 0, 15, TimeSpan.Zero)),
         ]);
     }
 
@@ -124,14 +155,15 @@ internal sealed class SignalSourceConfiguration : IEntityTypeConfiguration<Signa
         string name,
         string description,
         string version,
-        SignalSourceStage stage) => SignalSource
+        SignalSourceStage stage,
+        DateTimeOffset createdTime = default) => SignalSource
         .Create(
             SignalSourceId.From(id).ThrowIfFailure().Value,
             name,
             description,
             version,
             stage,
-            DateTimeOffset.UtcNow)
+            createdTime == default ? DateTimeOffset.UtcNow : createdTime)
         .ThrowIfError()
         .Value;
 }
