@@ -25,7 +25,7 @@ internal static class SnapshotExtensions
             Id = snapshot.Id.Value,
             SignalSourceId = snapshot.SignalSourceId.Value,
             Time = snapshot.Time,
-            Latency = snapshot.Latency,
+            Latency = snapshot.Latency.Value,
             Symbol = snapshot.Symbol.Value,
             BarTime = snapshot.BarTime,
             LastPrice = snapshot.LastPrice,

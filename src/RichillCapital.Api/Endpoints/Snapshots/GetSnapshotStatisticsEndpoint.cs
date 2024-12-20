@@ -34,13 +34,13 @@ public sealed class GetSnapshotStatisticsEndpoint(
             .Select(x => x.Latency)
             .ToList();
 
-        var mean = latencies.Average();
-        var max = latencies.Max();
-        var min = latencies.Min();
+        var mean = latencies.Average(l => l.Value);
+        var max = latencies.Max(l => l.Value);
+        var min = latencies.Min(l => l.Value);
         var std = CalculateStandardDeviation(latencies, mean);
 
         var latencyCounts = latencies
-            .Select(latency => ClassifyLatency(latency, mean, std))
+            .Select(ClassifyLatency)
             .GroupBy(category => category)
             .ToDictionary(group => group.Key, group => group.Count());
 
@@ -62,9 +62,11 @@ public sealed class GetSnapshotStatisticsEndpoint(
     }
 
     private double CalculateStandardDeviation(
-        List<int> values,
+        List<Latency> latencies,
         double mean)
     {
+        var values = latencies.Select(l => l.Value).ToList();
+
         var sumOfSquares = values
             .Select(v => Math.Pow(v - mean, 2))
             .Sum();
@@ -72,23 +74,29 @@ public sealed class GetSnapshotStatisticsEndpoint(
         return Math.Sqrt(sumOfSquares / values.Count);
     }
 
-    private string ClassifyLatency(double latency, double mean, double std)
+    private string ClassifyLatency(Latency latency)
     {
-        if (latency >= (mean - std) && latency <= (mean + std))
+        var defaultMean = 2500m;
+        var defaultStandardDeviation = 2500m;
+
+        if (latency.Value >= (defaultMean - defaultStandardDeviation)
+            && latency.Value <= (defaultMean + defaultStandardDeviation))
         {
             return "Normal";
         }
-        else if (latency >= (mean - 2 * std) && latency <= (mean + 2 * std))
+
+        if (latency.Value >= (defaultMean - 2 * defaultStandardDeviation)
+            && latency.Value <= (defaultMean + 2 * defaultStandardDeviation))
         {
             return "Minor";
         }
-        else if (latency >= (mean - 3 * std) && latency <= (mean + 3 * std))
+
+        if (latency.Value >= (defaultMean - 3 * defaultStandardDeviation)
+            && latency.Value <= (defaultMean + 3 * defaultStandardDeviation))
         {
             return "Moderate";
         }
-        else
-        {
-            return "Severe";
-        }
+
+        return "Severe";
     }
 }

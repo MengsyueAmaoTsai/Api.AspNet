@@ -9,7 +9,7 @@ public sealed class Snapshot : Entity<SnapshotId>
         SnapshotId id,
         SignalSourceId signalSourceId,
         DateTimeOffset time,
-        int latency,
+        Latency latency,
         Symbol symbol,
         DateTimeOffset barTime,
         decimal lastPrice,
@@ -29,7 +29,7 @@ public sealed class Snapshot : Entity<SnapshotId>
 
     public SignalSourceId SignalSourceId { get; private set; }
     public DateTimeOffset Time { get; private set; }
-    public int Latency { get; private set; }
+    public Latency Latency { get; private set; }
 
     public Symbol Symbol { get; private set; }
     public DateTimeOffset BarTime { get; private set; }
@@ -41,7 +41,7 @@ public sealed class Snapshot : Entity<SnapshotId>
         SnapshotId id,
         SignalSourceId signalSourceId,
         DateTimeOffset time,
-        int latency,
+        Latency latency,
         Symbol symbol,
         DateTimeOffset barTime,
         decimal lastPrice,
@@ -95,6 +95,28 @@ public sealed class SnapshotId : SingleValueObject<string>
         From(Guid.NewGuid().ToString()).Value;
 }
 
+public sealed class Latency : SingleValueObject<int>
+{
+    private const int Mean = 2500;
+    private const int DefaultStandardDeviation = 2500;
+
+    private Latency(int value)
+        : base(value)
+    {
+    }
+
+    public static Result<Latency> Create(int value)
+    {
+        if (value < 0)
+        {
+            return Result<Latency>.Failure(Error.Invalid($"{nameof(Latency)} cannot be negative."));
+        }
+
+        var latency = new Latency(value);
+        return Result<Latency>.With(latency);
+    }
+}
+
 public static class SnapshotErrors
 {
     public static Error NotFound(SnapshotId id) =>
@@ -113,7 +135,7 @@ public sealed record SnapshotCreatedDomainEvent : SnapshotDomainEvent
 {
     public required SignalSourceId SignalSourceId { get; init; }
     public required DateTimeOffset Time { get; init; }
-    public required int Latency { get; init; }
+    public required Latency Latency { get; init; }
     public required Symbol Symbol { get; init; }
     public required DateTimeOffset BarTime { get; init; }
     public required decimal LastPrice { get; init; }

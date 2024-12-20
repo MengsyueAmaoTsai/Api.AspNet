@@ -36,5 +36,12 @@ internal sealed class SnapshotConfiguration : IEntityTypeConfiguration<Snapshot>
                 symbol => symbol.Value,
                 value => Symbol.From(value).ThrowIfFailure().Value)
             .IsRequired();
+
+        builder
+            .Property(snapshot => snapshot.Latency)
+            .HasConversion(
+                latency => latency.Value,
+                value => Latency.Create(value).ThrowIfFailure().Value)
+            .IsRequired();
     }
 }

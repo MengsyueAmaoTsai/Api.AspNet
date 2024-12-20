@@ -40,14 +40,18 @@ internal sealed class CreateSnapshotCommandHandler(
         }
 
         var createdTime = _dateTimeProvider.UtcNow;
+        var latencyResult = Latency.Create((int)(createdTime - command.Time).TotalMilliseconds);
 
-        var latency = (int)(createdTime - command.Time).TotalMilliseconds;
+        if (latencyResult.IsFailure)
+        {
+            return ErrorOr<SnapshotId>.WithError(latencyResult.Error);
+        }
 
         var errorOrSnapshot = Snapshot.Create(
             id: SnapshotId.NewSnapshotId(),
             signalSourceId: sourceId,
             time: command.Time,
-            latency: latency,
+            latency: latencyResult.Value,
             symbol: symbol,
             barTime: command.BarTime,
             lastPrice: command.LastPrice,
