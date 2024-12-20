@@ -82,6 +82,8 @@ public static class ApiRoutes
         public const string List = SnapshotsBase;
         public const string Create = SnapshotsBase;
         public const string Get = $"{SnapshotsBase}/{{snapshotId}}";
+
+        public const string Statistics = $"{SnapshotsBase}/statistics";
     }
 
     public static class SignalSubscriptions
