@@ -56,15 +56,23 @@ public sealed class GetSnapshotStatisticsEndpoint(
                 normals = latencyCounts.GetValueOrDefault("Normal", 0),
                 normalPercentage = Math.Round(
                     (double)latencyCounts.GetValueOrDefault("Normal", 0) / latencies.Count * 100, 2),
+                normalMean = Math.Round(
+                    latencies.Where(l => ClassifyLatency(l) == "Normal").Average(l => l.Value), 2),
                 minors = latencyCounts.GetValueOrDefault("Minor", 0),
                 minorPercentage = Math.Round(
                     (double)latencyCounts.GetValueOrDefault("Minor", 0) / latencies.Count * 100, 2),
+                minorMean = Math.Round(
+                    latencies.Where(l => ClassifyLatency(l) == "Minor").Average(l => l.Value), 2),
                 moderates = latencyCounts.GetValueOrDefault("Moderate", 0),
                 moderatePercentage = Math.Round(
                     (double)latencyCounts.GetValueOrDefault("Moderate", 0) / latencies.Count * 100, 2),
+                moderateMean = Math.Round(
+                    latencies.Where(l => ClassifyLatency(l) == "Moderate").Average(l => l.Value), 2),
                 severes = latencyCounts.GetValueOrDefault("Severe", 0),
                 severePercentage = Math.Round(
                     (double)latencyCounts.GetValueOrDefault("Severe", 0) / latencies.Count * 100, 2),
+                severeMean = Math.Round(
+                    latencies.Where(l => ClassifyLatency(l) == "Severe").Average(l => l.Value), 2)
             }
         });
     }
