@@ -76,7 +76,7 @@ internal sealed class SnapshotCreatedDomainEventHandler(
 
     private async Task SendToSlackAsync(string message)
     {
-        var slackWebhookUrl = "https://hooks.slack.com/services/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";
+        var slackWebhookUrl = "https://hooks.slack.com/services/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";
 
         var slackMessage = new
         {
