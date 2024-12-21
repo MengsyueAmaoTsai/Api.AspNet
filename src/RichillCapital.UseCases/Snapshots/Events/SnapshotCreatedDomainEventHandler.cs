@@ -37,31 +37,16 @@ internal sealed class SnapshotCreatedDomainEventHandler(
             return;
         }
 
-        await NotificationAsync(domainEvent);
-    }
-
-    private async Task NotificationAsync(SnapshotCreatedDomainEvent domainEvent)
-    {
         var content = new StringBuilder()
-            .AppendLine($"Time: {domainEvent.Time:yyyy-MM-dd HH:mm:ss.fff}")
-            .AppendLine($"Source: {domainEvent.SignalSourceId}")
-            .AppendLine("--------------- Data set ---------------")
-            .AppendLine($"Symbol: {domainEvent.Symbol}")
-            .AppendLine($"Bar time: {domainEvent.BarTime:yyyy-MM-dd HH:mm:ss.fff}")
-            .AppendLine($"Last price: {domainEvent.LastPrice}")
-            .AppendLine("--------------- Order ---------------")
-            .AppendLine("--------------- Position ---------------")
-            .AppendLine("--------------- Additional info ---------------")
-            .AppendLine($"Latency: {domainEvent.Latency} ms")
-            .AppendLine(string.IsNullOrEmpty(domainEvent.Message) ? string.Empty : domainEvent.Message)
+            .AppendLine($"[{domainEvent.GetType().Name}]")
+            .AppendLine($"Time: {domainEvent.Time:yyyy-MM-dd HH:mm:ss.fff} - [{domainEvent.SignalSourceId}] Latency: {domainEvent.Latency}ms")
+            .AppendLine($"Message: {(string.IsNullOrEmpty(domainEvent.Message) ? "No message" : domainEvent.Message)}")
             .ToString();
 
-        await SendToSlackAsync(content);
-        await SendToDiscordWebhookAsync(content);
-        await SendToTelegramAsync(content);
+        await SendToTelegramDefaultAsync(content);
     }
 
-    private async Task SendToTelegramAsync(string message)
+    private async Task SendToTelegramDefaultAsync(string message)
     {
         var botToken = "7528339438:AAHhzsG26Ki-TefkWZj-WnJn-Wdh1vynqv0";
         var chatId = "-1002280797874";
