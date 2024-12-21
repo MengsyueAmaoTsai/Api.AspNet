@@ -4,6 +4,8 @@ using RichillCapital.Api.Endpoints;
 using RichillCapital.Api.Middlewares;
 using RichillCapital.Api.OpenApi;
 using RichillCapital.Infrastructure.BackgroundJobs;
+using RichillCapital.Infrastructure.Brokerages.Binance;
+using RichillCapital.Infrastructure.Brokerages.Max;
 using RichillCapital.Infrastructure.Clock;
 using RichillCapital.Infrastructure.Events;
 using RichillCapital.Infrastructure.Logging;
@@ -22,6 +24,9 @@ builder.Services.AddDateTimeProvider();
 builder.Services.AddDomainEventServices();
 builder.Services.AddPersistence();
 builder.Services.AddBackgroundJobs();
+
+builder.Services.AddMaxBrokerage();
+builder.Services.AddBinanceBrokerage();
 
 builder.Services.AddMiddlewares();
 builder.Services.AddOpenApi();
@@ -72,7 +77,7 @@ app.UseHangfireDashboard(options: new DashboardOptions
 
 app.MapEndpoints();
 
-// app.UseBackgroundJobs();
+app.UseBackgroundJobs();
 
 await app.RunAsync();
 
