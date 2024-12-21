@@ -5,10 +5,12 @@ using Microsoft.Extensions.Logging;
 
 using Newtonsoft.Json;
 
+using RichillCapital.Infrastructure.Brokerages.Max.Sdk.Contracts;
+using RichillCapital.Infrastructure.Brokerages.Max.Sdk.Contracts.Members;
 using RichillCapital.SharedKernel;
 using RichillCapital.SharedKernel.Monads;
 
-namespace RichillCapital.Infrastructure.Brokerages.Max;
+namespace RichillCapital.Infrastructure.Brokerages.Max.Sdk;
 
 public sealed class MaxRestService(
     ILogger<MaxRestService> _logger,
@@ -17,10 +19,37 @@ public sealed class MaxRestService(
     public async Task<Result<MaxUserInfoResponse>> GetUserInfoAsync(
         CancellationToken cancellationToken = default)
     {
-        var path = "/api/v2/members/me";
+        var path = "/api/v2/members/profile";
         var parameters = new Dictionary<string, object>();
 
         return await InvokeRequestAsync<MaxUserInfoResponse>(
+            HttpMethod.Get,
+            path,
+            parameters,
+            requiresAuthentication: true,
+            cancellationToken);
+    }
+
+    public async Task<Result<MaxMeResponse>> GetMeAsync(CancellationToken cancellationToken = default)
+    {
+        var path = "/api/v2/members/me";
+        var parameters = new Dictionary<string, object>();
+
+        return await InvokeRequestAsync<MaxMeResponse>(
+            HttpMethod.Get,
+            path,
+            parameters,
+            requiresAuthentication: true,
+            cancellationToken);
+    }
+
+    public async Task<Result<MaxMemberProfileResponse>> GetMemberProfileAsync(
+        CancellationToken cancellationToken = default)
+    {
+        var path = "/api/v2/members/profile";
+        var parameters = new Dictionary<string, object>();
+
+        return await InvokeRequestAsync<MaxMemberProfileResponse>(
             HttpMethod.Get,
             path,
             parameters,
@@ -49,17 +78,32 @@ public sealed class MaxRestService(
         if (!httpResponse.IsSuccessStatusCode)
         {
             var errorContent = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
-            var maxErrorResponse = JsonConvert.DeserializeObject<MaxErrorResponse>(errorContent);
 
-            var error = Error.Unexpected($"Failed to get user info. {maxErrorResponse.Error.Code} {maxErrorResponse.Error.Message}");
-            return Result<TResponse>.Failure(error);
+            try
+            {
+                var maxErrorResponse = JsonConvert.DeserializeObject<MaxErrorResponse>(errorContent);
+                var error = Error.Unexpected($"Failed to get user info. {maxErrorResponse.Error.Code} {maxErrorResponse.Error.Message}");
+                return Result<TResponse>.Failure(error);
+            }
+            catch (JsonSerializationException)
+            {
+                var error = Error.Unexpected($"Failed to deserialize error response. {errorContent}");
+                return Result<TResponse>.Failure(error);
+            }
         }
 
         var content = await httpResponse.Content.ReadAsStringAsync(cancellationToken);
 
-        var response = JsonConvert.DeserializeObject<TResponse>(content);
-
-        return Result<TResponse>.With(response);
+        try
+        {
+            var response = JsonConvert.DeserializeObject<TResponse>(content);
+            return Result<TResponse>.With(response);
+        }
+        catch (JsonSerializationException)
+        {
+            var error = Error.Unexpected($"Failed to deserialize response. {content}");
+            return Result<TResponse>.Failure(error);
+        }
     }
 
     private HttpRequestMessage CreateRequest(
@@ -128,24 +172,6 @@ public sealed class MaxRestService(
             .Replace("-", "")
             .ToLower();
     }
-}
-
-public sealed record MaxErrorResponse
-{
-    public required MaxErrorInternalResponse Error { get; init; }
-}
-
-public sealed record MaxErrorInternalResponse
-{
-    public required int Code { get; init; }
-    public required string Message { get; init; }
-}
-
-public sealed record MaxUserInfoResponse
-{
-    public required string Email { get; init; }
-    public required int Level { get; init; }
-    public required bool MWalletEnabled { get; init; }
 }
 
 internal static class HttpRequestMessageExtensions

@@ -1,5 +1,7 @@
 using Microsoft.Extensions.DependencyInjection;
 
+using RichillCapital.Infrastructure.Brokerages.Max.Sdk;
+
 namespace RichillCapital.Infrastructure.Brokerages.Max;
 
 public static class MaxBrokerageServiceExtensions

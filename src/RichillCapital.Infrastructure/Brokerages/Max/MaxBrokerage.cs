@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 
 using RichillCapital.Domain;
+using RichillCapital.Infrastructure.Brokerages.Max.Sdk;
 using RichillCapital.SharedKernel.Monads;
 
 namespace RichillCapital.Infrastructure.Brokerages.Max;
@@ -21,15 +22,39 @@ public sealed class MaxBrokerage(
             return Result<IEnumerable<Account>>.Failure(userInfoResult.Error);
         }
 
-        var userInfo = userInfoResult.Value;
+        var memberProfileResult = await _restService.GetMemberProfileAsync(cancellationToken);
 
-        _logger.LogError("User info: {info}", userInfo);
+        if (memberProfileResult.IsFailure)
+        {
+            return Result<IEnumerable<Account>>.Failure(memberProfileResult.Error);
+        }
+
+        var meResult = await _restService.GetMeAsync(cancellationToken);
+
+        if (meResult.IsFailure)
+        {
+            return Result<IEnumerable<Account>>.Failure(meResult.Error);
+        }
+
+        var userInfo = userInfoResult.Value;
+        var memberProfile = memberProfileResult.Value;
+        var me = meResult.Value;
+
+        foreach (var maxAccount in me.Accounts)
+        {
+            _logger.LogInformation(
+                "{currency}: {balance}",
+                maxAccount.Currency,
+                maxAccount.Balance);
+        }
+
+        var maxUid = memberProfile.Uid;
 
         var errorOrAccount = Account
             .Create(
-                id: AccountId.From(MaxUid).ThrowIfFailure().Value,
+                id: AccountId.From(maxUid).ThrowIfFailure().Value,
                 userId: UserId.From("UID0000001").ThrowIfFailure().Value,
-                name: MaxUid,
+                name: $"MAX-{memberProfile.Name}",
                 createdTime: DateTimeOffset.UtcNow);
 
         var account = errorOrAccount.ThrowIfError().Value;

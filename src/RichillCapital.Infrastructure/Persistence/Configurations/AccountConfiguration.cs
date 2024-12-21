@@ -44,10 +44,6 @@ internal sealed class AccountConfiguration : IEntityTypeConfiguration<Account>
                 id: "1178017",
                 userId: "UID0000001",
                 name: "Pepperstone Live Raw"),
-            CreateAccount(
-                id: "xxxxxxxxxxxxxx",
-                userId: "UID0000001",
-                name: "Binance Futures"),
         ]);
     }
 
