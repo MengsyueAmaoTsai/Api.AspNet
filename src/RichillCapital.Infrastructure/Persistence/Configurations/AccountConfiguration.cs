@@ -37,13 +37,9 @@ internal sealed class AccountConfiguration : IEntityTypeConfiguration<Account>
 
         builder.HasData([
             CreateAccount(
-                id: "5011908",
+                id: "8003-0112193",
                 userId: "UID0000001",
-                name: "Pepperstone Demo"),
-            CreateAccount(
-                id: "1178017",
-                userId: "UID0000001",
-                name: "Pepperstone Live Raw"),
+                name: "統一期-台南-蔡孟學"),
         ]);
     }
 
